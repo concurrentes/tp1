@@ -5,6 +5,8 @@
 #include "ProcessFactory.h"
 #include "Process.h"
 
+#include "SharedStack.h"
+
 class ProcessA : public Process {
 public:
   int run() {
