@@ -30,6 +30,8 @@ private:
    * Las funcionalidades propias de cada proceso deben ser definidas por
    * las implementaciones concretas en el método run.
    *
+   * Retorna el estado de finalización del proceso.
+   *
    */
   virtual int run() = 0;
 
@@ -58,9 +60,19 @@ private:
    */
   void _shutdown_children();
 
+protected:
+
+  /*
+   * clean_zombies
+   *
+   * Limpia de la memoria los procesos que hayan finalizado.
+   *
+   */
+  void clean_zombies();
+
 public:
 
-  /* 
+  /*
    * start
    *
    * Inicia el proceso. Se puede utilizar, por ejemplo, de la siguiente forma:

@@ -1,3 +1,4 @@
+#include "Logger.h"
 #include "Process.h"
 
 #include <unistd.h>
@@ -9,10 +10,13 @@ void Process::start() {
   this->pid = fork();
 
   if (this->pid == 0) {
+    LOG(LOG_DEBUG, "Proceso " << get_pid() << " instanciado.");
     srand(get_pid());
     int exit_status = run();
     _finalize();
     exit(exit_status);
+  } else {
+    LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") iniciado.");
   }
 }
 
@@ -83,6 +87,20 @@ void Process::spawn_child(const ProcessFactory &factory) {
   children.push_back(p);
 }
 
+void Process::clean_zombies() {
+  if (this->is_self()) {
+    p_vec::iterator it;
+    for (it = children.begin(); it != children.end(); ++it) {
+      int status;
+      if (waitpid((*it)->get_pid(), &status, WNOHANG) == (*it)->get_pid()) {
+        delete *it;
+        children.erase(it);
+      }
+    }
+  }
+}
+
 Process::~Process() {
   _finalize();
+  LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") destruido.");
 }

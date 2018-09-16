@@ -2,41 +2,21 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "ProcessFactory.h"
-#include "Process.h"
-
-#include "SharedStack.h"
-
-class ProcessA : public Process {
-public:
-  int run() {
-    printf("Process A\n");
-    return 0;
-  }
-};
-
-class FactoryA : public ProcessFactory {
-public:
-  Process *instantiate() const {
-    return new ProcessA;
-  }
-};
-
-class ParentProcess : public Process {
-public:
-  int run() {
-    printf("Launching parent process\n");
-    FactoryA factory;
-    spawn_child(factory);
-    wait_for_children();
-    printf("Parent process out\n");
-  }
-};
+#include "Logger.h"
+#include "Configuration.h"
+#include "Engine.h"
 
 int main(int argc, char** argv) {
-  ParentProcess parent;
-  parent.start();
+  LOG(LOG_INFO, "Cargando configuración.");
+  Configuration configuration(argc, argv);
+
+  LOG(LOG_INFO, "Iniciando simulación.");
+  Engine engine(configuration);
+  engine.start();
+
+  LOG(LOG_INFO, "Esperando finalización de la simulación.");
   wait(0);
-  printf("Engine out\n");
+
+  LOG(LOG_INFO, "Simulación finalizada.");
   return 0;
 }

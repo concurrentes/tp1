@@ -30,6 +30,16 @@ private:
    */
   void generate_random_process();
 
+  /*
+   * run
+   *
+   * Comienza a generar hasta "max" procesos cada "interval" segundos.
+   * Los procesos generados son instanciados en base a los objetos
+   * tipo factory registrados mediante register_factory.
+   * 
+   */
+  virtual int run();
+
 public:
 
   /*
@@ -55,16 +65,6 @@ public:
    *
    */
   void register_factory(const ProcessFactory &factory, unsigned int w);
-
-  /*
-   * run
-   *
-   * Comienza a generar hasta "max" procesos cada "interval" segundos.
-   * Los procesos generados son instanciados en base a los objetos
-   * tipo factory registrados mediante register_factory.
-   * 
-   */
-  virtual int run();
 
   virtual ~Generator();
 
