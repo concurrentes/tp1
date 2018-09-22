@@ -77,6 +77,8 @@ int SharedQueue::create_segment(key_t key, size_t segment_size) {
    */
   q_header->consumed = DATA_OFFSET;
   q_header->capacity = segment_size;
+
+  return this->shmid;
 }
 
 uint8_t *SharedQueue::attach() {
@@ -165,10 +167,10 @@ int SharedQueue::enqueue_on_non_empty(void *data, uint32_t size, uint16_t p) {
   }
 
   switch(state) {
-    case FREE_AFTER:
+    case FREE_AFTER | ENUF_SPACE:
       tail->ptr_next = DELTA(tail, NODE_TOP_AXIS(tail));
       break;
-    case FREE_START:
+    case FREE_START | ENUF_SPACE:
       tail->ptr_next = REWIND(tail, q_header);
       break;
   }
