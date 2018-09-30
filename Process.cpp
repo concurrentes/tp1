@@ -3,14 +3,18 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <assert.h>
 
 void Process::start() {
+  this->graceful_quit = 0;
   this->pid = fork();
 
   if (this->pid == 0) {
     LOG(LOG_DEBUG, "Proceso " << get_pid() << " instanciado.");
+    SignalHandler::getInstance()->registrarHandler(SIGINT, this);
     srand(get_pid());
     int exit_status = run();
     _finalize();
@@ -62,10 +66,12 @@ void Process::_shutdown_children() {
 
 void Process::shutdown() {
   if (this->is_self()) {
-   _shutdown_children();
-   wait_for_children();
+    this->graceful_quit = 1;
+    _shutdown_children();
+    wait_for_children();
   } else {
-    // TODO: Mandar señal para finalizar.
+    LOG(LOG_DEBUG, "Enviando SIGINT a " << this->get_pid() << ".");
+    kill(this->get_pid(), SIGINT);
   }
 }
 
@@ -98,6 +104,17 @@ void Process::clean_zombies() {
       }
     }
   }
+}
+
+int Process::handle_signal(int signum) {
+  assert(signum == SIGINT);
+  this->graceful_quit = 1;
+  shutdown();
+  return 0;
+}
+
+bool Process::should_quit_gracefully() {
+  return graceful_quit == 1;
 }
 
 Process::~Process() {

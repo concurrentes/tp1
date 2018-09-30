@@ -37,7 +37,7 @@ private:
   /*
   * Cola que contendrá los pasajeros en espera de un barco.
   */
-  BlockingSharedQueue dock_queue;
+  BlockingSharedQueue *dock_queue;
 
   int run();
 

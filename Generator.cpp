@@ -26,12 +26,21 @@ void Generator::register_factory(
 
 int Generator::run() {
   LOG(LOG_DEBUG, "Ejecutando generador (T=" << interval << ")");
-  for (unsigned int i = 0; max == 0 || i < max; i++) {
+  for (unsigned int i = 0; !should_quit_gracefully() && (max == 0 || i < max); i++) {
     sleep(interval);
     generate_random_process();
     clean_zombies();
   }
-  wait_for_children();
+
+  /*
+   * Ya debería haberse ejecutado shutdown, pero ejecutamos nuevamente
+   * para asegurarnos de matar algún proceso que se haya generado luego
+   * del shutdown, y también para esperar a los hijos.
+   */
+  if (should_quit_gracefully()) {
+    shutdown();
+  }
+  
   return 0;
 }
 

@@ -2,12 +2,13 @@
 #define PROCESS_H_
 
 #include "ProcessFactory.h"
+#include "SignalHandler.h"
 
 #include <sys/types.h>
 #include <unistd.h>
 #include <vector>
 
-class Process {
+class Process : public EventHandler {
 
 private:
 
@@ -23,6 +24,19 @@ private:
    *
    */
   p_vec children;
+
+  /*
+   * graceful_quit
+   *
+   * Booleano que, de valer 1, indica que el proceso debería comenzar
+   * el proceso de finalización. Los herederos de Process que deben
+   * ejecutarse por tiempo indefinido deberán verificar graceful_quit
+   * en forma periódica para determinar si deben continuar o no.
+   *
+   * Para verificar el valor de graceful_quit, utilizar la función
+   * should_quit_gracefully.
+   */
+  sig_atomic_t graceful_quit;
 
   /*
    * run
@@ -69,6 +83,11 @@ protected:
    *
    */
   void clean_zombies();
+
+  /*
+   * Devuelve el valor del booleano graceful_quit.
+   */
+  bool should_quit_gracefully();
 
 public:
 
@@ -171,6 +190,11 @@ public:
    *
    */
   void spawn_child(ProcessFactory &factory);
+
+  /*
+   *
+   */
+  virtual int handle_signal(int signum);
 
   virtual ~Process();
 

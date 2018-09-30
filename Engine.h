@@ -19,6 +19,8 @@ public:
 
   Engine(const Configuration &config);
 
+  void receive_commands();
+
 };
 
 #endif
