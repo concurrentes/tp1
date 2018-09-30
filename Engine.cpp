@@ -4,12 +4,19 @@
 
 Engine::Engine(const Configuration &config)
   :
+  city_generator_factory(
+    config.get_city_count()
+  ),
   boat_generator_factory(
     config.get_boat_count(),
-    config.get_boat_capacity()) {
+    config.get_boat_capacity()
+  ) {
 }
 
 int Engine::run() {
+
+  LOG(LOG_INFO, "Iniciando generador de ciudades.");
+  spawn_child(city_generator_factory);
 
   LOG(LOG_INFO, "Iniciando generador de botes.");
   spawn_child(boat_generator_factory);

@@ -9,6 +9,8 @@ private:
 
   unsigned int boat_capacity;
 
+  unsigned int city_count;
+
 public:
 
   Configuration(int argc, char **argv);
@@ -16,6 +18,8 @@ public:
   unsigned int get_boat_count() const;
 
   unsigned int get_boat_capacity() const;
+
+  unsigned int get_city_count() const;
 
 };
 

@@ -14,7 +14,7 @@ BoatFactory::BoatFactory(unsigned int boat_capacity) {
   this->boat_capacity = boat_capacity;
 }
 
-Process *BoatFactory::instantiate() const {
+Process *BoatFactory::instantiate() {
   LOG(LOG_INFO, "Generando bote, capacidad " << this->boat_capacity << ".");
   return new Boat(this->boat_capacity);
 }

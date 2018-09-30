@@ -237,7 +237,12 @@ void *SharedQueue::next() {
     errno = SMQ_ERROR_EMPTY_QUEUE;
     return NULL;
   }
-};
+}
+
+uint16_t SharedQueue::count() {
+  queue_header_t *q_header = (queue_header_t *)(this->ptr_segment);
+  return q_header->count;
+}
 
 void *SharedQueue::pop_next(queue_header_t *queue_header) {
   /*

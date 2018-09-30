@@ -8,6 +8,10 @@
 
 namespace smstruct {
 
+  /*
+   * Nota: esta clase no implementa mecanismos de sincronización;
+   * en cambio, utilizar BlockingSharedQueue.
+   */
   class SharedQueue {
 
   private:
@@ -141,6 +145,11 @@ namespace smstruct {
      *
      */
     void *next();
+
+    /*
+     * Retorna la cantidad de elementos en la cola.
+     */
+    uint16_t count();
 
     /*
      * Destructor. Libera todos los recursos asociados a la estructura,

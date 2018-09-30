@@ -26,7 +26,7 @@ public:
 
   BoatFactory(unsigned int boat_capacity);
 
-  Process *instantiate() const;
+  Process *instantiate();
 
 };
 

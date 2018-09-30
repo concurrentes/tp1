@@ -15,7 +15,7 @@ Generator::Generator(unsigned int interval, unsigned int max = 0) {
 }
 
 void Generator::register_factory(
-  const ProcessFactory &factory, unsigned int w) {
+  ProcessFactory &factory, unsigned int w) {
 
   t_process_factory *f = new t_process_factory;
   f->factory = &factory;
@@ -45,7 +45,7 @@ void Generator::generate_random_process() {
     w_accumulated += (*it)->weight;
 
     if (r < w_accumulated) {
-      const ProcessFactory *factory = (*it)->factory;
+      ProcessFactory *factory = (*it)->factory;
       spawn_child(*factory);
       return;
     }

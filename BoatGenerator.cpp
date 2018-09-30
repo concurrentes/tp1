@@ -23,6 +23,6 @@ BoatGeneratorFactory::BoatGeneratorFactory(
   this->boat_capacity = boat_capacity;
 }
 
-Process *BoatGeneratorFactory::instantiate() const {
+Process *BoatGeneratorFactory::instantiate() {
   return new BoatGenerator(this->boat_count, this->boat_capacity);
 }

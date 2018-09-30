@@ -13,7 +13,7 @@ public:
    * Instancia un proceso de un cierto tipo.
    *
    */
-  virtual Process *instantiate() const = 0;
+  virtual Process *instantiate() = 0;
 
   virtual ~ProcessFactory() {};
 

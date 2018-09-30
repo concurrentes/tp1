@@ -170,7 +170,7 @@ public:
    * recibido como parámetro.
    *
    */
-  void spawn_child(const ProcessFactory &factory);
+  void spawn_child(ProcessFactory &factory);
 
   virtual ~Process();
 

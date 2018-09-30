@@ -4,11 +4,13 @@
 #include "Configuration.h"
 #include "Process.h"
 #include "BoatGenerator.h"
+#include "CityGenerator.h"
 
 class Engine : public Process {
 
 private:
 
+  CityGeneratorFactory city_generator_factory;
   BoatGeneratorFactory boat_generator_factory;
 
   int run();

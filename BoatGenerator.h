@@ -28,7 +28,7 @@ public:
 
   BoatGeneratorFactory(unsigned int boat_count, unsigned int boat_capacity);
 
-  Process *instantiate() const;
+  Process *instantiate();
 
 };
 

@@ -15,7 +15,7 @@ private:
   unsigned int w_total;
 
   typedef struct {
-    const ProcessFactory *factory;
+    ProcessFactory *factory;
     unsigned int weight;
   } t_process_factory;
 
@@ -36,7 +36,7 @@ private:
    * Comienza a generar hasta "max" procesos cada "interval" segundos.
    * Los procesos generados son instanciados en base a los objetos
    * tipo factory registrados mediante register_factory.
-   * 
+   *
    */
   virtual int run();
 
@@ -59,12 +59,12 @@ public:
    *
    * En cada ciclo el generador selecciona un objeto factory de
    * entre todos los registrados. La selección es aleatoria;
-   * la probabilidad de seleccionar un factory con peso w_i es 
+   * la probabilidad de seleccionar un factory con peso w_i es
    *
    * p_i = w_i/sum_j(w_j), j != i.
    *
    */
-  void register_factory(const ProcessFactory &factory, unsigned int w);
+  void register_factory(ProcessFactory &factory, unsigned int w);
 
   virtual ~Generator();
 

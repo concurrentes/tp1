@@ -81,7 +81,7 @@ void Process::_clear_children() {
   children.clear();
 }
 
-void Process::spawn_child(const ProcessFactory &factory) {
+void Process::spawn_child(ProcessFactory &factory) {
   Process *p = factory.instantiate();
   p->start();
   children.push_back(p);

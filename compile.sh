@@ -2,4 +2,4 @@ if ! [[ -d bin ]]; then
   mkdir bin
 fi
 
-g++ *.cpp -o bin/runme
+g++ -g *.cpp -o bin/runme
