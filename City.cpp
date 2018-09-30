@@ -129,7 +129,7 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
       if (is_inspector(*current)) {
         boat.discharge_passengers_without_ticket();
       } else if (is_prefect(*current)) {
-
+        // TODO
       }
 
       delete current;

@@ -17,6 +17,7 @@ Configuration::Configuration() {
   this->p_tourist = 25;
   this->p_ticket_inspector = 10;
   this->p_naval_prefect = 1;
+  this->p_tourist_leaving_ship = 50;
 }
 
 unsigned int Configuration::get_boat_count() const {
@@ -61,4 +62,8 @@ unsigned int Configuration::get_probability_of_naval_prefect() const {
 
 unsigned int Configuration::get_zombie_cleanup_interval() const {
   return this->zombie_cleanup_interval;
+}
+
+unsigned int Configuration::get_probability_of_tourist_leaving_ship() const {
+  return this->p_tourist_leaving_ship;
 }

@@ -27,6 +27,8 @@ private:
 
   unsigned int zombie_cleanup_interval;
 
+  unsigned int p_tourist_leaving_ship;
+
   Configuration();
 
 public:
@@ -65,6 +67,9 @@ public:
 
   // Tiempo entre limpieza de zombies para los generadores.
   unsigned int get_zombie_cleanup_interval() const;
+
+  // Probabilidad de que un turista baje del barco.
+  unsigned int get_probability_of_tourist_leaving_ship() const;
 
 };
 

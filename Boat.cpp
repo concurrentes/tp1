@@ -4,6 +4,7 @@
 #include "Configuration.h"
 
 #include <unistd.h>
+#include <stdlib.h>
 
 Boat::Boat(unsigned int id, unsigned int capacity) {
   this->id = id;
@@ -59,10 +60,13 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
     }
 
     if (current->type == PERSON_TYPE_TOURIST) {
-      LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
-      // TODO generar random y ver si baja.
       // TODO manejar caso en el que se van a pasear y llegan a otra ciudad.
-      it = discharge_passenger(it);
+
+      if ((rand() % 100) < config.get_probability_of_tourist_leaving_ship()) {
+        LOG(LOG_INFO, "Al turista " << current->id << " se le antojó bajar en " << city_id);
+        LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
+        it = discharge_passenger(it);
+      }
       continue;
     }
 
