@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv) {
   LOG(LOG_INFO, "Cargando configuración.");
-  Configuration configuration(argc, argv);
+  Configuration configuration = Configuration::get_instance();
 
   LOG(LOG_INFO, "Iniciando simulación.");
   Engine engine(configuration);

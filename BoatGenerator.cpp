@@ -1,7 +1,9 @@
 #include "Logger.h"
 #include "BoatGenerator.h"
+#include "Configuration.h"
 
-const unsigned int BoatGenerator::GENERATION_INTERVAL = 5;
+const unsigned int BoatGenerator::GENERATION_INTERVAL =
+  Configuration::get_instance().get_boat_generation_interval();
 
 BoatGenerator::BoatGenerator(
   unsigned int boat_count,

@@ -1,6 +1,7 @@
 #include "Logger.h"
 #include "ProcessFactory.h"
 #include "Generator.h"
+#include "Configuration.h"
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -26,21 +27,18 @@ void Generator::register_factory(
 
 int Generator::run() {
   LOG(LOG_DEBUG, "Ejecutando generador (T=" << interval << ")");
+  
   for (unsigned int i = 0; !should_quit_gracefully() && (max == 0 || i < max); i++) {
     sleep(interval);
     generate_random_process();
     clean_zombies();
   }
 
-  /*
-   * Ya debería haberse ejecutado shutdown, pero ejecutamos nuevamente
-   * para asegurarnos de matar algún proceso que se haya generado luego
-   * del shutdown, y también para esperar a los hijos.
-   */
-  if (should_quit_gracefully()) {
-    shutdown();
+  while (!should_quit_gracefully()) {
+    sleep(Configuration::get_instance().get_zombie_cleanup_interval());
+    clean_zombies();
   }
-  
+
   return 0;
 }
 

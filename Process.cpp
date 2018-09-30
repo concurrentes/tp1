@@ -118,6 +118,8 @@ bool Process::should_quit_gracefully() {
 }
 
 Process::~Process() {
-  _finalize();
-  LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") destruido.");
+  if (this->is_self()) {
+    _finalize();
+    LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") destruido.");
+  }
 }

@@ -1,24 +1,13 @@
 #include "SignalHandler.h"
 
-SignalHandler* SignalHandler :: instance = NULL;
 EventHandler* SignalHandler :: signal_handlers [ NSIG ];
 
 SignalHandler :: SignalHandler () {
 }
 
 SignalHandler* SignalHandler :: getInstance () {
-
-	if ( instance == NULL )
-		instance = new SignalHandler ();
-
-	return instance;
-}
-
-void SignalHandler :: destruir () {
-	if ( instance != NULL ) {
-		delete ( instance );
-		instance = NULL;
-	}
+	static SignalHandler handler;
+	return &handler;
 }
 
 EventHandler* SignalHandler :: registrarHandler ( int signum,EventHandler* eh ) {

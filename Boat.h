@@ -3,16 +3,32 @@
 
 #include "Process.h"
 #include "ProcessFactory.h"
+#include "Person.h"
+
+#include <vector>
 
 class Boat : public Process {
 
 public:
 
-  Boat(unsigned int capacity);
+  Boat(unsigned int id, unsigned int capacity);
+
+  unsigned int get_free_seats();
+  unsigned int get_passenger_count();
+
+  void discharge_passengers_going_to(unsigned int city_id);
+  void discharge_passengers();
+  void discharge_passengers_without_ticket();
+  void receive_passenger(person_t *passenger);
+
+  ~Boat();
 
 private:
 
+  unsigned int id;
   unsigned int capacity;
+
+  std::vector<person_t *> passengers;
 
   int run();
 
@@ -21,6 +37,7 @@ private:
 class BoatFactory : public ProcessFactory {
 
   unsigned int boat_capacity;
+  unsigned int boat_count;
 
 public:
 

@@ -74,6 +74,11 @@ namespace smstruct {
      */
     unsigned int take(unsigned int count, std::list<void *> &taken);
 
+    /*
+     * Retorna la cantidad de elementos en la cola.
+     */
+    unsigned int count();
+
     ~BlockingSharedQueue();
 
   };

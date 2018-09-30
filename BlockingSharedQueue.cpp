@@ -2,6 +2,8 @@
 #include "Lock.h"
 #include "HDuplexChannel.h"
 
+#include "Logger.h"
+
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/stat.h>
@@ -34,10 +36,10 @@ key_t BlockingSharedQueue::get_segment_key(unsigned int queue_id) {
   this->queue_path = path_builder.str();
 
   // Intentamos abrir el archivo, o lo creamos si no existe.
-  this->fd = open(this->queue_path.c_str(), O_CREAT);
+  this->fd = open(this->queue_path.c_str(), O_CREAT, 0644);
 
   // Generamos y retornamos la clave usada para instanciar el segmento.
-  return ftok(this->queue_path.c_str(), 0);
+  return ftok(this->queue_path.c_str(), 1);
 }
 
 int BlockingSharedQueue::enqueue(void *data, uint32_t data_size, uint16_t p) {
@@ -63,8 +65,12 @@ unsigned int BlockingSharedQueue::take(unsigned int n, std::list<void *> &l) {
   return m;
 }
 
+unsigned int BlockingSharedQueue::count() {
+  Lock(this->fd);
+  return this->queue->count();
+}
+
 BlockingSharedQueue::~BlockingSharedQueue() {
   delete this->queue;
   close(this->fd);
-  unlink(this->queue_path.c_str());
 }
