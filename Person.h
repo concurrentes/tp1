@@ -26,6 +26,10 @@ void generate_random_person(person_t &person);
 
 bool is_regular_passenger(person_t &person);
 
+bool is_inspector(person_t &person);
+
+bool is_prefect(person_t &person);
+
 const char *get_description(person_t &person);
 
 #endif

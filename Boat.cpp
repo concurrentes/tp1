@@ -39,8 +39,7 @@ void Boat::discharge_passengers() {
 
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ) {
-    it = passengers.erase(it);
-    sleep(config.get_mean_gate_time());
+    it = discharge_passenger(it);
   }
 }
 
@@ -55,8 +54,7 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
 
     if (current->type == PERSON_TYPE_WORKER && current->destination == city_id) {
       LOG(LOG_INFO, "Bote " << get_pid() << " descargando trabajador " << current->id);
-      it = passengers.erase(it);
-      sleep(config.get_mean_gate_time());
+      it = discharge_passenger(it);
       continue;
     }
 
@@ -64,8 +62,7 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
       LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
       // TODO generar random y ver si baja.
       // TODO manejar caso en el que se van a pasear y llegan a otra ciudad.
-      it = passengers.erase(it);
-      sleep(config.get_mean_gate_time());
+      it = discharge_passenger(it);
       continue;
     }
 
@@ -79,17 +76,39 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
 void Boat::discharge_passengers_without_ticket() {
   Configuration config = Configuration::get_instance();
 
+  LOG(LOG_INFO, "Un inspector de pasajes ha subido al bote " << get_pid());
+
+  unsigned int count = 0;
+
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ) {
     person_t *current = *it;
 
     if (current->has_ticket == 0) {
-      it = passengers.erase(it);
-      sleep(config.get_mean_gate_time());
+      LOG(LOG_INFO, get_description(*current) << " " << current->id << " no tiene boleto, por lo que deberá bajarse");
+      LOG(LOG_INFO, get_description(*current) << " " << current->id << " está bajando del bote " << get_pid() << " por no tener boleto");
+      it = discharge_passenger(it);
+      count++;
     } else {
       it++;
     }
   }
+
+  if (count > 0) {
+    LOG(LOG_INFO, "El inspector ha bajado " << count << " pasajeros; satisfecho, baja del bote y se va caminando");
+  } else {
+    LOG(LOG_INFO, "El inspector observa que todos los pasajeros tienen boleto, por lo que baja del bote y se va caminando");
+  }
+}
+
+std::vector<person_t *>::iterator Boat::discharge_passenger(
+  std::vector<person_t*>::iterator &it) {
+
+  person_t *passenger = *it;
+
+  sleep(Configuration::get_instance().get_mean_gate_time());
+  delete passenger;
+  return passengers.erase(it);
 }
 
 unsigned int Boat::get_passenger_count() {

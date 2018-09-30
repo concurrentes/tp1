@@ -86,7 +86,7 @@ void City::receive_boat(Boat &boat) {
     delete dock_queue;
   }
 
-  LOG(LOG_INFO, "Bote " << boat.get_pid() << " sale de ciudad " << this->id << ".");
+  LOG(LOG_INFO, "Bote " << boat.get_pid() << " sale de ciudad " << this->id);
 }
 
 void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
@@ -125,8 +125,13 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
       boat.receive_passenger(current);
       sleep(config.get_mean_gate_time());
     } else {
-      const char *type = get_description(*current);
-      // TODO: verificar tipo y hacer cosas.
+
+      if (is_inspector(*current)) {
+        boat.discharge_passengers_without_ticket();
+      } else if (is_prefect(*current)) {
+
+      }
+
       delete current;
     }
 

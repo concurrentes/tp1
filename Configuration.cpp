@@ -7,15 +7,15 @@ const Configuration &Configuration::get_instance() {
 
 Configuration::Configuration() {
   // TODO: Inicializar esto cargando algún archivo o algo.
-  this->boat_count = 1;
+  this->boat_count = 2;
   this->boat_capacity = 5;
-  this->city_count = 1;
+  this->city_count = 2;
   this->city_step_mean_time = 25;
   this->person_generation_mean_time = 15;
   this->boat_generation_interval = 25;
   this->mean_gate_time = 1;
   this->p_tourist = 25;
-  this->p_ticket_inspector = 2;
+  this->p_ticket_inspector = 10;
   this->p_naval_prefect = 1;
 }
 

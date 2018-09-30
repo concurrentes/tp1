@@ -50,6 +50,14 @@ void generate_random_person(person_t &person) {
 
 }
 
+bool is_inspector(person_t &person) {
+  return person.type == PERSON_TYPE_INSPECTOR;
+}
+
+bool is_prefect(person_t &person) {
+  return person.type == PERSON_TYPE_PREFECT;
+}
+
 bool is_regular_passenger(person_t &person) {
   return person.type == PERSON_TYPE_WORKER || person.type == PERSON_TYPE_TOURIST;
 }
