@@ -35,4 +35,5 @@ bin/
 
 # CLion metadata
 .*
-!.idea/
+.idea/
+
