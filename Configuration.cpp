@@ -67,3 +67,11 @@ unsigned int Configuration::get_zombie_cleanup_interval() const {
 unsigned int Configuration::get_probability_of_tourist_leaving_ship() const {
   return this->p_tourist_leaving_ship;
 }
+
+void Configuration::set_capacity_of_boats(const int &capacity) {
+    this->boat_capacity = capacity;
+}
+
+void Configuration::set_number_of_boats(const int &boats) {
+    this->boat_count = boats;
+}

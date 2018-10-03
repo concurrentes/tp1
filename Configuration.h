@@ -71,6 +71,10 @@ public:
   // Probabilidad de que un turista baje del barco.
   unsigned int get_probability_of_tourist_leaving_ship() const;
 
+  void set_number_of_boats(const int &boats);
+
+  void set_capacity_of_boats(const int &capacity);
+
 };
 
 #endif
