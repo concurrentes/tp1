@@ -1,5 +1,5 @@
 if ! [[ -d bin ]]; then
   mkdir bin
 fi
-
-g++ -g *.cpp -o bin/runme
+cp config.ini bin/
+g++ -std=c++11 -g *.cpp -o bin/runme
