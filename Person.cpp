@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 #include <strings.h>
+#include "MemoriaCompartida.h"
+#include "Control.h"
 
 void generate_random_person(person_t &person) {
   Configuration config = Configuration::get_instance();
@@ -12,7 +14,7 @@ void generate_random_person(person_t &person) {
 
   // Generamos aleatoriamente el tipo de persona.
   unsigned int chosen_type = 0;
-
+  person.id = Control().get_next_id();
   unsigned int p_vec[3] = {
     config.get_probability_of_tourist(),
     config.get_probability_of_ticket_inspector(),
