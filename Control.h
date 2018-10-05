@@ -1,7 +1,10 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include "Semaforo.h"
 #include "MemoriaCompartida.h"
+
+#define SEM "/usr/bin/base32"
 
 typedef struct {
     uint32_t last_id;
@@ -21,7 +24,9 @@ public:
     void initialize();
 private:
     int fd;
+    Semaforo* _psem;
     MemoriaCompartida<control_t> _shared_mem;
+
 };
 
 
