@@ -1,4 +1,8 @@
 #include "Configuration.h"
+#include <map>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 const Configuration &Configuration::get_instance() {
   static Configuration configuration;
@@ -6,18 +10,46 @@ const Configuration &Configuration::get_instance() {
 }
 
 Configuration::Configuration() {
-  // TODO: Inicializar esto cargando algún archivo o algo.
-  this->boat_count = 2;
-  this->boat_capacity = 5;
-  this->city_count = 2;
-  this->city_step_mean_time = 25;
-  this->person_generation_mean_time = 15;
-  this->boat_generation_interval = 25;
-  this->mean_gate_time = 1;
-  this->p_tourist = 25;
-  this->p_ticket_inspector = 10;
-  this->p_naval_prefect = 1;
-  this->p_tourist_leaving_ship = 50;
+  std::map<std::string, std::string> config = this->_get_config_from_file();
+  this->boat_count = this->get_or_default(config, "BOAT_COUNT", 2);
+  this->boat_capacity = this->get_or_default(config, "BOAT_CAPACITY", 5);
+  this->city_count = this->get_or_default(config, "CITY_COUNT", 2);
+  this->city_step_mean_time = this->get_or_default(config, "CITY_STEP_MEAN_TIME", 25);
+  this->person_generation_mean_time = this->get_or_default(config, "PERSON_GENERATION_MEAN_TIME", 15);
+  this->boat_generation_interval = this->get_or_default(config, "BOAT_GENERATION_INTERVAL", 25);
+  this->mean_gate_time = this->get_or_default(config, "MEAN_GATE_TIME", 1);
+  this->p_tourist = this->get_or_default(config, "P_TOURIST", 25);
+  this->p_ticket_inspector = this->get_or_default(config, "P_TICKET_INSPECTOR", 10);
+  this->p_naval_prefect = this->get_or_default(config, "P_NAVAL_PREFECT", 1);
+  this->p_tourist_leaving_ship = this->get_or_default(config, "P_TOURIST_LEAVING_SHIP", 50);
+}
+
+int Configuration::get_or_default(
+        std::map<std::string, std::string>& config,
+        const std::string& key,
+        int default_value) {
+  try {
+    return std::stoi(config[key]);
+  } catch (const std::exception &ex){
+    return default_value;
+  }
+}
+
+std::map<std::string, std::string> Configuration::_get_config_from_file() {
+  std::string line;
+  std::ifstream config_file("config.ini");
+  std::map <std::string, std::string> config;
+  if (config_file.is_open()) {
+    while (getline(config_file, line)) {
+      std::stringstream ss(line);
+      std::string parameter, value;
+      std::getline(ss, parameter, '=');
+      std::getline(ss, value, '=');
+      config[parameter] = value;
+    }
+    config_file.close();
+  }
+  return config;
 }
 
 unsigned int Configuration::get_boat_count() const {

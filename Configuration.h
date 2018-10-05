@@ -1,6 +1,8 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
+#include <map>
+
 class Configuration {
 
 private:
@@ -28,6 +30,13 @@ private:
   unsigned int zombie_cleanup_interval;
 
   unsigned int p_tourist_leaving_ship;
+
+  std::map<std::string, std::string> _get_config_from_file();
+
+  int get_or_default(
+            std::map<std::string, std::string>& config,
+            const std::string& key,
+            int default_value);
 
   Configuration();
 
