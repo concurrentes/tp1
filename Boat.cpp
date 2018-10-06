@@ -2,6 +2,7 @@
 #include "Boat.h"
 #include "City.h"
 #include "Configuration.h"
+#include "Control.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 Boat::Boat(unsigned int id, unsigned int capacity) {
   this->id = id;
   this->capacity = capacity;
+  this->papers_in_order = rand() % 2;
 }
 
 int Boat::run() {
@@ -31,7 +33,7 @@ void Boat::receive_passenger(person_t *passenger) {
 
   const char *description = get_description(*passenger);
 
-  LOG(LOG_INFO, description << " " << id << " sube al bote " << get_pid());
+  LOG(LOG_INFO, description << " " << id << " sube al bote " << get_pid() << " Boleto: " << passenger->has_ticket);
   passengers.push_back(passenger);
 }
 
@@ -92,6 +94,7 @@ void Boat::discharge_passengers_without_ticket() {
       LOG(LOG_INFO, get_description(*current) << " " << current->id << " no tiene boleto, por lo que deberá bajarse");
       LOG(LOG_INFO, get_description(*current) << " " << current->id << " está bajando del bote " << get_pid() << " por no tener boleto");
       it = discharge_passenger(it);
+      Control().add_discharged();
       count++;
     } else {
       it++;

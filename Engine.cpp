@@ -1,6 +1,8 @@
 #include "Logger.h"
 #include "Configuration.h"
 #include "Engine.h"
+#include "Control.h"
+#include "Semaforo.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -18,7 +20,9 @@ Engine::Engine(const Configuration &config)
 }
 
 int Engine::run() {
-
+  Semaforo sem(SEM);
+  //arranca en 0 para q no se pidan datos antes de inicialziar
+  sem.inicializar(0);
   LOG(LOG_INFO, "Iniciando generador de ciudades.");
   spawn_child(city_generator_factory);
 
@@ -29,13 +33,15 @@ int Engine::run() {
   receive_commands();
 
   LOG(LOG_INFO, "Finalizando simulación.")
+  sem.eliminar();
   return 0;
 }
 
 void Engine::receive_commands() {
   const uint32_t MAX_COMMAND_LENGTH = 32;
   char command_buffer[MAX_COMMAND_LENGTH];
-
+  Control control;
+  control.initialize();
   while (!should_quit_gracefully()) {
     bzero(command_buffer, MAX_COMMAND_LENGTH);
     read(STDIN_FILENO, &command_buffer, MAX_COMMAND_LENGTH);
@@ -45,6 +51,8 @@ void Engine::receive_commands() {
       shutdown();
     } else if (strncmp(command_buffer, "count", 5) == 0) {
       LOG(LOG_INFO, "Received count command.");
+      LOG(LOG_INFO, "Pasajeros sin ticket bajados: " << control.get_discharged_count());
+      LOG(LOG_INFO, "Naves decomisadas: " << control.get_captured_ships_count());
     }
   }
 }

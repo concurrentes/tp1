@@ -78,6 +78,8 @@ public:
 
   void receive_boat(Boat &boat);
 
+  void inspect_boat(Boat &boat);
+
   void load_passengers_into(Boat &boat, unsigned int free_seats);
 
 };
