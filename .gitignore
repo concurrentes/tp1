@@ -32,3 +32,8 @@
 *.app
 
 bin/
+
+# CLion metadata
+.*
+.idea/
+

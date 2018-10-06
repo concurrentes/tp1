@@ -4,6 +4,8 @@
 #include "Lock.h"
 #include "Person.h"
 #include "Boat.h"
+#include "Control.h"
+#include "Configuration.h"
 
 #include <sstream>
 #include <string>
@@ -68,7 +70,9 @@ void City::push_new_person() {
 }
 
 void City::receive_boat(Boat &boat) {
-  Lock(this->fd);
+
+  LOG(LOG_DEBUG, "[" + std::to_string(getpid()) + "] Attempting to set lock with file descriptor: " + std::to_string(fd));
+  Lock(this->lock_path);
 
   LOG(LOG_INFO, "Bote " << boat.get_pid() << " llega a ciudad " << this->id);
 
@@ -85,8 +89,33 @@ void City::receive_boat(Boat &boat) {
     load_passengers_into(boat, free_seats);
     delete dock_queue;
   }
+  try {
+     Configuration config = Configuration::get_instance();
+     if (rand() % 100 < config.get_probability_of_naval_prefect()) {
+         this->inspect_boat(boat);
+     }
+     if (rand() % 100 < config.get_probability_of_ticket_inspector()){
+         boat.discharge_passengers_without_ticket();
+     }
+     LOG(LOG_INFO, "Bote " << boat.get_pid() << " sale de ciudad " << this->id);
+  } catch (const std::string& message) {
+      LOG(LOG_INFO, message);
+  }
+}
 
-  LOG(LOG_INFO, "Bote " << boat.get_pid() << " sale de ciudad " << this->id);
+void City::inspect_boat(Boat &boat){
+  LOG(LOG_INFO, "Prefectura inspecciona Bote " << boat.get_pid() << " en ciudad " << this->id);
+  if (boat.papers_in_order == 0) {
+    std::string message = "Decomisando Bote " + std::to_string(boat.get_pid());
+    LOG(LOG_INFO, "Bote " << boat.get_pid() << " esta flojo de papeles");
+    LOG(LOG_INFO, "Bajando pasajeros de Bote " << boat.get_pid());
+    boat.discharge_passengers();
+    boat.shutdown();
+    Control().add_captured_ship();
+    throw "Decomisando Bote " + std::to_string(boat.get_pid());
+  } else {
+    LOG(LOG_INFO, "Bote " << boat.get_pid() << " papeles en orden");
+  }
 }
 
 void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
@@ -106,11 +135,6 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
    *
    * - Si la persona es un turista o un trabajador, agregarlos al bote.
    *
-   * - Si la persona es un inspector de tickets, bajar a todos los pasajeros
-   *   que estén en el bote y que no tengan ticket.
-   *
-   * - Si es prefectura naval, generar un número aleatorio. Si esta dentro
-   *   de cierto rango, bajar a todas las personas y terminar el bote.
    */
   std::list<void *>::iterator it;
 
@@ -121,20 +145,8 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
 
     LOG(LOG_INFO, t << " " << current->id << " está por subir al bote en " << this->id);
 
-    if (is_regular_passenger(*current)) {
-      boat.receive_passenger(current);
-      sleep(config.get_mean_gate_time());
-    } else {
-
-      if (is_inspector(*current)) {
-        boat.discharge_passengers_without_ticket();
-      } else if (is_prefect(*current)) {
-        // TODO
-      }
-
-      delete current;
-    }
-
+    boat.receive_passenger(current);
+    sleep(config.get_mean_gate_time());
   }
 
   free_seats = boat.get_free_seats();

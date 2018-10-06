@@ -36,21 +36,21 @@ key_t BlockingSharedQueue::get_segment_key(unsigned int queue_id) {
   this->queue_path = path_builder.str();
 
   // Intentamos abrir el archivo, o lo creamos si no existe.
-  this->fd = open(this->queue_path.c_str(), O_CREAT, 0644);
+  this->fd = open(this->queue_path.c_str(), O_CREAT|O_RDWR, 0644);
 
   // Generamos y retornamos la clave usada para instanciar el segmento.
   return ftok(this->queue_path.c_str(), 1);
 }
 
 int BlockingSharedQueue::enqueue(void *data, uint32_t data_size, uint16_t p) {
-  Lock(this->fd);
+  Lock(this->queue_path);
 
   // Acolamos el nuevo elemento en la estructura.
   this->queue->enqueue(data, data_size, p);
 }
 
 unsigned int BlockingSharedQueue::take(unsigned int n, std::list<void *> &l) {
-  Lock(this->fd);
+  Lock(this->queue_path);
 
   // Determinamos cantidad de elementos a leer.
   uint16_t c = this->queue->count();
@@ -66,7 +66,7 @@ unsigned int BlockingSharedQueue::take(unsigned int n, std::list<void *> &l) {
 }
 
 unsigned int BlockingSharedQueue::count() {
-  Lock(this->fd);
+  Lock(this->queue_path);
   return this->queue->count();
 }
 
