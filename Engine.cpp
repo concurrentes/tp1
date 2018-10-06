@@ -29,6 +29,8 @@ int Engine::run() {
   LOG(LOG_INFO, "Iniciando generador de botes.");
   spawn_child(boat_generator_factory);
 
+  spawn_child(walking_generator_factory);
+
   LOG(LOG_INFO, "Simulación en curso.");
   receive_commands();
 
