@@ -51,7 +51,6 @@ public:
 
     ~Walking();
 
-
 };
 
 #endif

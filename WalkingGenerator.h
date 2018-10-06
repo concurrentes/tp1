@@ -8,7 +8,7 @@
 class WalkingGenerator : public Generator {
 
 private:
-
+    BlockingSharedQueue walking_queue;
     WalkingFactory factory;
 
 public:
