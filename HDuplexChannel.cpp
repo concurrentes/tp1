@@ -1,5 +1,6 @@
 #include "HDuplexChannel.h"
 #include "Lock.h"
+#include "Logger.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -42,7 +43,9 @@ int HDuplexChannel::push(void *data, ssize_t count) {
 }
 
 void HDuplexChannel::recv(void *buff, ssize_t count) {
-  Lock(this->fd);
+
+  LOG(LOG_DEBUG, "[" + std::to_string(getpid()) + ", HDuplex] Attempting to set lock with file descriptor: " + std::to_string(fd));
+  Lock(this->path);
 
   ssize_t r = 0;
   while (r < count) {
@@ -51,7 +54,9 @@ void HDuplexChannel::recv(void *buff, ssize_t count) {
 }
 
 ssize_t HDuplexChannel::recv_or_continue(void *buff, ssize_t count) {
-  Lock(this->fd);
+
+  LOG(LOG_DEBUG, "[" + std::to_string(getpid()) + "] Attempting to set lock with file descriptor: " + std::to_string(fd));
+  Lock(this->path);
 
   // Obtenemos los flags asociados al descriptor, sin nonblock.
   int flags = fcntl(this->fd, F_GETFL) & (~O_NONBLOCK);

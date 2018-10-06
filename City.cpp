@@ -70,7 +70,9 @@ void City::push_new_person() {
 }
 
 void City::receive_boat(Boat &boat) {
-  Lock(this->fd);
+
+  LOG(LOG_DEBUG, "[" + std::to_string(getpid()) + "] Attempting to set lock with file descriptor: " + std::to_string(fd));
+  Lock(this->lock_path);
 
   LOG(LOG_INFO, "Bote " << boat.get_pid() << " llega a ciudad " << this->id);
 
