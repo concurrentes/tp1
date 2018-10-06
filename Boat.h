@@ -16,6 +16,8 @@ public:
   unsigned int get_free_seats();
   unsigned int get_passenger_count();
 
+  unsigned int papers_in_order;
+
   void discharge_passengers_going_to(unsigned int city_id);
   void discharge_passengers();
   void discharge_passengers_without_ticket();

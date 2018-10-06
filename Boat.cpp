@@ -10,6 +10,7 @@
 Boat::Boat(unsigned int id, unsigned int capacity) {
   this->id = id;
   this->capacity = capacity;
+  this->papers_in_order = rand() % 2;
 }
 
 int Boat::run() {
