@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <iostream>
 
 Engine::Engine(const Configuration &config)
   :
@@ -38,7 +39,8 @@ int Engine::run() {
   LOG(LOG_INFO, "Simulación en curso.");
   receive_commands();
 
-  LOG(LOG_INFO, "Finalizando simulación.")
+  // El comando 'count' y el comando 'quit' deben verse por pantalla siempre
+  std::cout << "Finalizando simulación." << std::endl;
   sem.eliminar();
 
   return 0;
@@ -58,8 +60,9 @@ void Engine::receive_commands() {
       shutdown();
     } else if (strncmp(command_buffer, "count", 5) == 0) {
       LOG(LOG_INFO, "Received count command.");
-      LOG(LOG_INFO, "Pasajeros sin ticket bajados: " << control.get_discharged_count());
-      LOG(LOG_INFO, "Naves decomisadas: " << control.get_captured_ships_count());
+      // El comando 'count' y el comando 'quit' deben verse por pantalla siempre
+      std::cout << "Pasajeros sin ticket bajados: " << control.get_discharged_count() << std::endl;
+      std::cout << "Naves decomisadas: " << control.get_captured_ships_count() << std::endl;
     }
   }
 }

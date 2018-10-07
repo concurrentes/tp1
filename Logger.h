@@ -12,10 +12,14 @@
 }
 
 #include <string>
+#include <iostream>
+#include <fstream>
 
 class Logger {
 
 public:
+
+  static void set_debug();
 
   static const Logger &get_instance();
 
@@ -29,12 +33,21 @@ public:
 
 private:
 
-  Logger() {}
+  Logger(std::string filename);
 
   Logger(Logger const &);
 
+  ~Logger();
+
   void operator=(Logger const &);
 
+  static bool in_debug;
+
+  std::ostream& mOutputStream;
+
+  static const std::string LOG_PATH;
+
+  std::string filename;
 };
 
 #endif
