@@ -89,13 +89,13 @@ El árbol de procesos se esquematiza en la figura 4.
 
 
 
-La jerarquía de clases se esquematiza en la figura 5. Todos los procesos heredan de una clase `Process`. Para instanciar un proceso, hay que llamar al método `spawn_child` de un cierto proceso particular, pasando un objeto `ProcessFactory` que define la inicialización concreta del proceso. El proceso utiliza el objeto factory para inicializar su nuevo hijo, y lo agrega a una lista de procesos hijos. Los generadores (de tipo `Generator`) son un tipo particular de procesos que, en intervalos periódicos, utilizan un cierto factory para generar procesos hijos; por ejemplo, `BoatGenerator` utiliza `BoatFactory` para instanciar procesos de tipo bote. Por otro lado, el motor `Engine`, que es el primer proceso que se ejecuta, utiliza `BoatGeneratorFactory` y `CityGeneratorFactory` para instanciar los generadores, obteniendo una jerarquía casi como la que se muestra en la figura 4. Adicionalmente, si bien no se muestra en la figura 5, existe también una clase `PaseadorFactory` que instancia un proceso `Paseador` que se encarga de realizar la tarea de pasear turistas, como ya se mencionó antes. 
+La jerarquía de clases se esquematiza en la figura 5. Todos los procesos heredan de una clase `Process`. Para instanciar un proceso, hay que llamar al método `spawn_child` de un cierto proceso particular, pasando un objeto `ProcessFactory` que define la inicialización concreta del proceso. El proceso utiliza el objeto factory para inicializar su nuevo hijo, y lo agrega a una lista de procesos hijos. Los generadores (de tipo `Generator`) son un tipo particular de procesos que, en intervalos periódicos, utilizan un cierto factory para generar procesos hijos; por ejemplo, `BoatGenerator` utiliza `BoatFactory` para instanciar procesos de tipo bote. Por otro lado, el motor `Engine`, que es el primer proceso que se ejecuta, utiliza `BoatGeneratorFactory` y `CityGeneratorFactory` para instanciar los generadores, obteniendo una jerarquía casi como la que se muestra en la figura 4. Adicionalmente, si bien no se muestra en la figura 5, existe también un `WalkingGenerator` que instancia un proceso `Walking` , que tiene la tarea de pasear turistas de una ciudad a otra.
 
 
 
 ![class-hierarchy](img/class-hierarchy.svg)
 
-<center>Figura 5: Jerarquía de clases.</center>
+<center>Figura 5: Jerarquía de clases; solo se muestran las clases más importantes.</center>
 
 
 
