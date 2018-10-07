@@ -6,7 +6,7 @@
 #include "Boat.h"
 #include "Control.h"
 #include "Configuration.h"
-#include "Walking.h"
+#include "Walker.h"
 #include "Random.h"
 
 #include <sstream>
@@ -15,13 +15,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-const std::string Walking::BASE_PATH = "/tmp/lakeconcu.dock.";
+const std::string Walker::BASE_PATH = "/tmp/lakeconcu.dock.";
 
-Process *WalkingFactory::instantiate() {
-    return new Walking();
+Process *WalkerFactory::instantiate() {
+    return new Walker();
 }
 
-int Walking::run() {
+int Walker::run() {
     Configuration config = Configuration::get_instance();
     walking_queue = new BlockingSharedQueue(config.get_city_count());
 
@@ -34,7 +34,7 @@ int Walking::run() {
         sleep(Random::random_wait(mu, dt));
 
         if (walking_queue->take(walking_queue->count(), people) == 0) {
-            LOG(LOG_INFO, "No hay gente caminando");
+            LOG(LOG_INFO, "No hay turistas paseando");
         }
 
         std::list<void *>::iterator it;
@@ -54,8 +54,9 @@ int Walking::run() {
     return 0;
 }
 
-Walking::Walking() {
+Walker::Walker() {
+  LOG(LOG_INFO, "Instanciado paseador de turistas");
 }
 
-Walking::~Walking() {
+Walker::~Walker() {
 }

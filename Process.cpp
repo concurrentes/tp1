@@ -17,6 +17,7 @@ void Process::start() {
     SignalHandler::getInstance()->registrarHandler(SIGINT, this);
     srand(get_pid());
     int exit_status = run();
+    shutdown();
     _finalize();
     exit(exit_status);
   } else {
@@ -88,9 +89,11 @@ void Process::_clear_children() {
 }
 
 void Process::spawn_child(ProcessFactory &factory) {
-  Process *p = factory.instantiate();
-  p->start();
-  children.push_back(p);
+  if (!should_quit_gracefully()) {
+    Process *p = factory.instantiate();
+    p->start();
+    children.push_back(p);
+  }
 }
 
 void Process::clean_zombies() {

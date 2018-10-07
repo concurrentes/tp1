@@ -5,7 +5,7 @@
 #include "Process.h"
 #include "BoatGenerator.h"
 #include "CityGenerator.h"
-#include "WalkingGenerator.h"
+#include "WalkerGenerator.h"
 
 class Engine : public Process {
 
@@ -13,7 +13,7 @@ private:
 
   CityGeneratorFactory city_generator_factory;
   BoatGeneratorFactory boat_generator_factory;
-  WalkingGeneratorFactory walking_generator_factory;
+  WalkerGeneratorFactory walking_generator_factory;
 
   int run();
 

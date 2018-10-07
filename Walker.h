@@ -12,7 +12,7 @@
 
 using namespace smstruct;
 
-class WalkingFactory : public ProcessFactory {
+class WalkerFactory : public ProcessFactory {
 
 
 public:
@@ -21,7 +21,7 @@ public:
 
 };
 
-class Walking : public Process {
+class Walker : public Process {
 
 private:
 
@@ -47,9 +47,9 @@ public:
 
     static const std::string BASE_PATH;
 
-    Walking();
+    Walker();
 
-    ~Walking();
+    ~Walker();
 
 };
 

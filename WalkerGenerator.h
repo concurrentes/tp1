@@ -3,21 +3,21 @@
 
 #include "ProcessFactory.h"
 #include "Generator.h"
-#include "Walking.h"
+#include "Walker.h"
 
-class WalkingGenerator : public Generator {
+class WalkerGenerator : public Generator {
 
 private:
     BlockingSharedQueue walking_queue;
-    WalkingFactory factory;
+    WalkerFactory factory;
 
 public:
 
-    WalkingGenerator();
+    WalkerGenerator();
 
 };
 
-class WalkingGeneratorFactory : public ProcessFactory {
+class WalkerGeneratorFactory : public ProcessFactory {
 
 
 public:
