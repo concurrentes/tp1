@@ -7,6 +7,7 @@
 #include "Control.h"
 #include "Configuration.h"
 #include "Walking.h"
+#include "Random.h"
 
 #include <sstream>
 #include <string>
@@ -28,7 +29,10 @@ int Walking::run() {
     while (!should_quit_gracefully()) {
         std::list<void *> people;
 
-        sleep(config.get_person_generation_mean_time());
+        unsigned int mu = config.get_mean_walker_time();
+        unsigned int dt = mu/2;
+        sleep(Random::random_wait(mu, dt));
+
         if (walking_queue->take(walking_queue->count(), people) == 0) {
             LOG(LOG_INFO, "No hay gente caminando");
         }
@@ -44,7 +48,6 @@ int Walking::run() {
         }
 
         people.clear();
-        sleep(config.get_mean_walker_time());
     }
 
     delete walking_queue;

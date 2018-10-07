@@ -3,6 +3,7 @@
 #include "City.h"
 #include "Configuration.h"
 #include "Control.h"
+#include "Random.h"
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -32,8 +33,9 @@ void Boat::receive_passenger(person_t *passenger) {
   uint32_t tp = passenger->type;
 
   const char *description = get_description(*passenger);
+  const char *has_ticket = passenger->has_ticket? "si" : "no";
 
-  LOG(LOG_INFO, description << " " << id << " sube al bote " << get_pid() << " Boleto: " << passenger->has_ticket);
+  LOG(LOG_INFO, description << " " << id << " sube al bote " << get_pid() << " (Boleto: " << has_ticket << ")");
   passengers.push_back(passenger);
 }
 
@@ -42,6 +44,11 @@ void Boat::discharge_passengers() {
 
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ) {
+    person_t *current = *it;
+
+    const char *description = get_description(*current);
+
+    LOG(LOG_INFO, "Bote " << get_pid() << " descargando " << description << " " << current->id);
     it = discharge_passenger(it);
   }
 }
@@ -64,11 +71,11 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
     if (current->type == PERSON_TYPE_TOURIST) {
       // TODO manejar caso en el que se van a pasear y llegan a otra ciudad.
 
-      if ((rand() % 100) < config.get_probability_of_tourist_leaving_ship()) {
+      if (Random::bernoulli(config.get_probability_of_tourist_leaving_ship())) {
         LOG(LOG_INFO, "Al turista " << current->id << " se le antojó bajar en " << city_id);
         LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
 
-        if ((rand() % 100) < config.get_probability_of_tourist_going_walking()) {
+        if (Random::bernoulli(config.get_probability_of_tourist_going_walking())) {
           LOG(LOG_INFO, "Turista " << current->id << " decidió ir a pasear");
           current->destination = (rand() % config.get_city_count());
           BlockingSharedQueue walking_queue(config.get_city_count());
@@ -77,6 +84,7 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
 
         it = discharge_passenger(it);
       }
+
       continue;
     }
 

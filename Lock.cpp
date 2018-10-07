@@ -18,7 +18,7 @@ Lock::Lock(std::string name) {
     exit(0);
   }
   std::string message = "Intento de tomar lock";
-  LOG(LOG_INFO, message)
+  LOG(LOG_DEBUG, message)
 
   this->lock.l_type = F_WRLCK;
 
@@ -34,7 +34,7 @@ Lock::~Lock() {
   // Intento de liberar el lock sobre el archivo .lock
   this->lock.l_type = F_UNLCK;
   std::string message = "Intentando liberar lock";
-  LOG(LOG_INFO, message)
+  LOG(LOG_DEBUG, message)
   if (fcntl(this->fd, F_SETLKW, &(this->lock)) < 0) {
     LOG(LOG_ERROR, "Error liberando lock, errno: " + std::to_string(errno));
     exit(0);
