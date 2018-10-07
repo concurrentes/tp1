@@ -20,20 +20,27 @@ Engine::Engine(const Configuration &config)
 }
 
 int Engine::run() {
+
   Semaforo sem(SEM);
+
   //arranca en 0 para q no se pidan datos antes de inicialziar
   sem.inicializar(0);
+
   LOG(LOG_INFO, "Iniciando generador de ciudades.");
   spawn_child(city_generator_factory);
 
   LOG(LOG_INFO, "Iniciando generador de botes.");
   spawn_child(boat_generator_factory);
 
+  // Inicializamos el generador del paseador de pasajeros.
+  spawn_child(walking_generator_factory);
+
   LOG(LOG_INFO, "Simulación en curso.");
   receive_commands();
 
   LOG(LOG_INFO, "Finalizando simulación.")
   sem.eliminar();
+
   return 0;
 }
 

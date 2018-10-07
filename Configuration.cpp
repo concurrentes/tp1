@@ -22,6 +22,8 @@ Configuration::Configuration() {
   this->p_ticket_inspector = this->get_or_default(config, "P_TICKET_INSPECTOR", 10);
   this->p_naval_prefect = this->get_or_default(config, "P_NAVAL_PREFECT", 1);
   this->p_tourist_leaving_ship = this->get_or_default(config, "P_TOURIST_LEAVING_SHIP", 50);
+  this->mean_walker_time = this->get_or_default(config, "MEAN_WALKER_TIME", 20);
+  this->p_tourist_going_for_a_walk = get_or_default(config, "P_TOURIST_WALKING", 50);
 }
 
 int Configuration::get_or_default(
@@ -98,4 +100,12 @@ unsigned int Configuration::get_zombie_cleanup_interval() const {
 
 unsigned int Configuration::get_probability_of_tourist_leaving_ship() const {
   return this->p_tourist_leaving_ship;
+}
+
+unsigned int Configuration::get_mean_walker_time() const {
+  return this->mean_walker_time;
+}
+
+unsigned int Configuration::get_probability_of_tourist_going_walking() const {
+  return this->p_tourist_going_for_a_walk;
 }

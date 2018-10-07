@@ -31,6 +31,11 @@ private:
 
   unsigned int p_tourist_leaving_ship;
 
+  unsigned int p_tourist_going_for_a_walk;
+  
+  unsigned int mean_walker_time;
+
+
   std::map<std::string, std::string> _get_config_from_file();
 
   int get_or_default(
@@ -79,6 +84,12 @@ public:
 
   // Probabilidad de que un turista baje del barco.
   unsigned int get_probability_of_tourist_leaving_ship() const;
+
+  // Tiempo promedio de espera del paseador de turistas.
+  unsigned int get_mean_walker_time() const;
+
+  // Probabilidad de que un turista decide irse a pasear.
+  unsigned int get_probability_of_tourist_going_walking() const;
 
 };
 

@@ -67,6 +67,14 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
       if ((rand() % 100) < config.get_probability_of_tourist_leaving_ship()) {
         LOG(LOG_INFO, "Al turista " << current->id << " se le antojó bajar en " << city_id);
         LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
+
+        if ((rand() % 100) < config.get_probability_of_tourist_going_walking()) {
+          LOG(LOG_INFO, "Turista " << current->id << " decidió ir a pasear");
+          current->destination = (rand() % config.get_city_count());
+          BlockingSharedQueue walking_queue(config.get_city_count());
+          walking_queue.enqueue(current, sizeof(person_t), 0);
+        }
+
         it = discharge_passenger(it);
       }
       continue;
