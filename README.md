@@ -19,7 +19,5 @@ TODO (cosas relativamente fáciles):
 
 * Los logs parecen estár mostrando los timestamps en segundos, a pesar de que pedimos microsegundos.
 
-* Sleeps aleatorios; en la configuración hay muchos tiempos promedio; habría que poner quizás algún delta y ajustar los sleeps que hay por ahí dando vueltas para que duren un tiempo aleatorio.
-
-* Implementar paseo entre ciudades para los turistas. La forma más simple sería con una cola bloqueante como las que tienen las ciudades; cuando un turista baja de un barco, hay una probabilidad de acolarlo en la cola, que es global. Después habría un proceso adicional que entre intervalos aleatorios lee de la cola y manda el turista que saca a una ciudad aleatoria
+* Quizás convenga bloquear SIGINT durante el handler, aunque no debería afectar en nada si no lo hacemos.
 
