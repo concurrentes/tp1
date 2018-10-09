@@ -146,7 +146,7 @@ unsigned int Boat::get_free_seats() {
 Boat::~Boat() {
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ++it) {
-    delete *it;
+    free(*it);
   }
   passengers.clear();
 }
