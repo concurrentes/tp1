@@ -225,14 +225,14 @@ _Como **ciudad** voy a generar pasajeros que sean trabajadores (con un destino e
 _Como **ciudad** voy a encolar a los pasajeros generados en una cola a la espera de un barco que los pueda transportar_
 
 | **Dado** | una ciudad del programa |
-| **Y** | un pasajero |
 |:---|:---|
+| **Y** | un pasajero |
 | **Cuando** | el pasajero es creado |
 | **Entonces** | se encola el pasajero en la cola de la ciudad a esperar un barco |
 
 | **Dado** | una ciudad del programa |
-| **Y** | un pasajero |
 |:---|:---|
+| **Y** | un pasajero |
 | **Cuando** | el pasajero es creado |
 | **Y** | no existe cola para la ciudad |
 | **Entonces** | se crea la cola de la ciudad como memoria compartida |
