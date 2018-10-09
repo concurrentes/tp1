@@ -98,4 +98,175 @@ La jerarquía de clases se esquematiza en la figura 5. Todos los procesos hereda
 <center>Figura 5: Jerarquía de clases; solo se muestran las clases más importantes.</center>
 
 
+### User stories
+
+#### Caso 1
+
+_Como **usuario de la aplicación** quiero que al correr la aplicación en modo no-debug la aplicación corra sin mostrar mensajes de log en pantalla_
+
+**Criterios de aceptación**
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+|**Cuando** | el usuario la ejecuta en modo no-debug |
+|**Entonces** | se muestra un mensaje introductorio explicándole cómo se correrá la aplicación |
+
+| **Dado** | la aplicación corriendo en modo no-debug |
+|:---|:---|
+|**Cuando** | ocurre un evento que resulta en un log |
+|**Entonces** | ese log no se muestra en pantalla ni en ningún otro lado |
+
+#### Caso 2
+
+_Como **usuario de la aplicación** quiero que al correr la aplicación en modo debug la aplicación corra sin mostrar mensajes de log en pantalla y se genere un archivo de log con los mensajes loggeados_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+|**Cuando** | el usuario la ejecuta en modo debug |
+|**Entonces** | se muestra un mensaje introductorio explicándole cómo se correrá la aplicación |
+
+| **Dado** | la aplicación corriendo en modo debug |
+|:---|:---|
+|**Cuando** | ocurre un evento que resulta en un log |
+|**Y** | no existe el archivo de log |
+|**Entonces** | ese log no se muestra en pantalla ni en ningún otro lado |
+|**Y** | ese log no se muestra en pantalla |
+| **Y** | se crea el archivo de log |
+| **Y** | se escribe el mensaje en el archivo |
+
+#### Caso 3
+
+_Como **usuario de la aplicación** quiero que al ingresar por consola el comando 'quit' el programa se detenga completamente, sin pérdida de memoria compartida, semáforos y sin dejar procesos colgados_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+| **Y** | la aplicación está corriendo |
+| **Cuando** | el usuario ingresa por consola el comando _quit_ |
+| **Entonces** | la aplicación se detiene |
+| **Y** | se muestra un mensaje en pantalla indicando que se detuvo la aplicación exitosamente |
+
+| **Dado** | la aplicación detenida luego de ejecutar el comando _quit_ |
+|:---|:---|
+| **Cuando** | el usuario ejecuta el comando _ps_ |
+| **Entonces** | no se ven procesos relacionados a la aplicación |
+
+| **Dado** | la aplicación detenida luego de ejecutar el comando _quit_ |
+|:---|:---|
+| **Cuando** | el usuario ejecuta el comando _ipcs_ |
+| **Entonces** | no se ven segmentos de memoria compartida ni semáforos asociados a la aplicación |
+
+#### Caso 4
+
+_Como **usuario de la aplicación** quiero que la corrida del proceso no resulte en pérdida de memoria_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+| **Cuando** | el usuario la corre utilizando Valgrind |
+| **Entonces** | Valgrind no registra reportes de procesos con pérdida de memoria |
+
+#### Caso 5
+
+_Como **motor de la aplicación** quiero generar barcos para que transporten pasajeros por las ciudades, que su cantidad y capacidad sean configurables_
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera procesos barco |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera tantos procesos barco como aparecen en el archivo `config.ini` bajo el tag `BOAT_COUNT` |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera tantos procesos barco con capacidad igual al número que aparece en el archivo `config.ini` bajo el tag `BOAT_CAPACITY` |
+
+#### Caso 6
+
+_Como **motor de la aplicación** quiero generar ciudades para que alberguen a los pasajeros y reciban barcos que los transporten entre ellas_
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera procesos ciudad |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera mínimamente 2 procesos ciudad |
+
+#### Caso 7
+
+_Como **ciudad** voy a generar pasajeros para que recorran el lago en barco_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán cada cierto tiempo pasajeros con origen en esta ciudad|
+
+#### Caso 8
+
+_Como **ciudad** voy a generar pasajeros que sean trabajadores (con un destino específico) o turistas (sin destino específico) para que recorran el lago de formas distintas_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán pasajeros no turistas que tendrán un destino fijo, determinado por una probabilidad |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán pasajeros turistas que no tendrán un destino fijo, determinado por una probabilidad |
+
+#### Caso 9
+
+_Como **ciudad** voy a encolar a los pasajeros generados en una cola a la espera de un barco que los pueda transportar_
+
+| **Dado** | una ciudad del programa |
+| **Y** | un pasajero |
+|:---|:---|
+| **Cuando** | el pasajero es creado |
+| **Entonces** | se encola el pasajero en la cola de la ciudad a esperar un barco |
+
+| **Dado** | una ciudad del programa |
+| **Y** | un pasajero |
+|:---|:---|
+| **Cuando** | el pasajero es creado |
+| **Y** | no existe cola para la ciudad |
+| **Entonces** | se crea la cola de la ciudad como memoria compartida |
+| **Y** | se encola el pasajero en la cola de la ciudad a esperar un barco |
+
+#### Caso 10
+
+_Como **ciudad** que recibir un único barco a la vez en mi muelle_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | un barco llega a la ciudad |
+| **Y** | no hay ningún barco en el muelle |
+| **Entonces** | dejo que el barco amarre en el muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | un barco llega a la ciudad |
+| **Y** | hay barco en el muelle |
+| **Entonces** | el barco se encola en una cola esperando amarrar al muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+|**Cuando** | un barco llega a la ciudad |
+| **Y** | hay barco en el muelle |
+| **Y** | no existe cola para el muelle |
+|**Entonces** | se crea la cola del muelle como memoria compartida |
+|**Y** | el barco se encola en esa cola esperando amarrar al muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Y** | hay barco en el muelle |
+| **Y** | hay barcos esperando en la cola |
+|**Cuando** | el barco zarpa |
+|**Entonces** | el primer barco en la cola sale de ella y amarra en el muelle |
+
 
