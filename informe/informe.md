@@ -104,8 +104,6 @@ La jerarquía de clases se esquematiza en la figura 5. Todos los procesos hereda
 
 _Como **usuario de la aplicación** quiero que al correr la aplicación en modo no-debug la aplicación corra sin mostrar mensajes de log en pantalla_
 
-**Criterios de aceptación**
-
 | **Dado** | un usuario con permiso para ejecutar la aplicación |
 |:---|:---|
 |**Cuando** | el usuario la ejecuta en modo no-debug |
@@ -115,6 +113,8 @@ _Como **usuario de la aplicación** quiero que al correr la aplicación en modo 
 |:---|:---|
 |**Cuando** | ocurre un evento que resulta en un log |
 |**Entonces** | ese log no se muestra en pantalla ni en ningún otro lado |
+
+---
 
 #### Caso 2
 
@@ -133,6 +133,8 @@ _Como **usuario de la aplicación** quiero que al correr la aplicación en modo 
 |**Y** | ese log no se muestra en pantalla |
 | **Y** | se crea el archivo de log |
 | **Y** | se escribe el mensaje en el archivo |
+
+---
 
 #### Caso 3
 
@@ -155,6 +157,8 @@ _Como **usuario de la aplicación** quiero que al ingresar por consola el comand
 | **Cuando** | el usuario ejecuta el comando _ipcs_ |
 | **Entonces** | no se ven segmentos de memoria compartida ni semáforos asociados a la aplicación |
 
+---
+
 #### Caso 4
 
 _Como **usuario de la aplicación** quiero que la corrida del proceso no resulte en pérdida de memoria_
@@ -163,6 +167,8 @@ _Como **usuario de la aplicación** quiero que la corrida del proceso no resulte
 |:---|:---|
 | **Cuando** | el usuario la corre utilizando Valgrind |
 | **Entonces** | Valgrind no registra reportes de procesos con pérdida de memoria |
+
+---
 
 #### Caso 5
 
@@ -183,6 +189,8 @@ _Como **motor de la aplicación** quiero generar barcos para que transporten pas
 | **Cuando** | la aplicación se inicia |
 | **Entonces** | el motor de la aplicación genera tantos procesos barco con capacidad igual al número que aparece en el archivo `config.ini` bajo el tag `BOAT_CAPACITY` |
 
+---
+
 #### Caso 6
 
 _Como **motor de la aplicación** quiero generar ciudades para que alberguen a los pasajeros y reciban barcos que los transporten entre ellas_
@@ -197,6 +205,8 @@ _Como **motor de la aplicación** quiero generar ciudades para que alberguen a l
 | **Cuando** | la aplicación se inicia |
 | **Entonces** | el motor de la aplicación genera mínimamente 2 procesos ciudad |
 
+---
+
 #### Caso 7
 
 _Como **ciudad** voy a generar pasajeros para que recorran el lago en barco_
@@ -205,6 +215,8 @@ _Como **ciudad** voy a generar pasajeros para que recorran el lago en barco_
 |:---|:---|
 | **Cuando** | se inicia la aplicación |
 | **Entonces** | se generarán cada cierto tiempo pasajeros con origen en esta ciudad|
+
+---
 
 #### Caso 8
 
@@ -219,6 +231,8 @@ _Como **ciudad** voy a generar pasajeros que sean trabajadores (con un destino e
 |:---|:---|
 | **Cuando** | se inicia la aplicación |
 | **Entonces** | se generarán pasajeros turistas que no tendrán un destino fijo, determinado por una probabilidad |
+
+---
 
 #### Caso 9
 
@@ -237,6 +251,8 @@ _Como **ciudad** voy a encolar a los pasajeros generados en una cola a la espera
 | **Y** | no existe cola para la ciudad |
 | **Entonces** | se crea la cola de la ciudad como memoria compartida |
 | **Y** | se encola el pasajero en la cola de la ciudad a esperar un barco |
+
+---
 
 #### Caso 10
 
@@ -268,5 +284,7 @@ _Como **ciudad** que recibir un único barco a la vez en mi muelle_
 | **Y** | hay barcos esperando en la cola |
 |**Cuando** | el barco zarpa |
 |**Entonces** | el primer barco en la cola sale de ella y amarra en el muelle |
+
+---
 
 
