@@ -287,4 +287,100 @@ _Como **ciudad** que recibir un único barco a la vez en mi muelle_
 
 ---
 
+#### Caso 11
 
+_Como **barco** quiero poder descargar mis pasajeros no-turistas en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco hace descender a los pasajeros no-turistas cuyo destino sea esta ciudad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco no fuerza a descender a los pasajeros no-turistas cuyo destino no sea esta ciudad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Y** | el barco no tiene pasajeros |
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | nadie desciende del barco |
+
+#### Caso 12
+
+_Como **barco** quiero poder descargar mis pasajeros turistas en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco hace descender a los pasajeros turistas que quieran bajar en esta ciudad con cierta probabilidad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco no fuerza a descender a los pasajeros turistas que decidieron no bajar en esta ciudad |
+
+#### Caso 13
+
+_Como **barco** quiero poder cargar pasajeros en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco sólo empieza a cargar pasajeros cuando terminó de descargar los pasajeros que tenían que bajar |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco sigue lleno |
+| **Entonces** | el barco no carga ningún pasajero en el muelle y zarpa |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco tiene lugar |
+| **Entonces** | el barco carga pasajeros de la cola del muelle en orden hasta ocupar su capacidad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco tiene lugar |
+| **Y** | no hay pasajeros en la cola del muelle |
+| **Entonces** | el barco no carga pasajeros y zarpa del muelle |
+
+#### Caso 14
+
+_Como **inspector** quiero poder hacer bajar pasajeros de barcos que no tengan ticket_
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el barco terminó de cargar pasajeros |
+| **Entonces** | el inspector decide inspeccionar con cierta probabilidad el barco |
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el inspector sube a inspeccionar pasajes |
+| **Y** | un pasajero no tiene ticket |
+| **Entonces** | pasajero baja del barco y se suma 1 al contador de "Pasajeros sin ticket bajados" |
+
+#### Caso 15
+
+_Como **prefecto** quiero poder inspeccionar barcos que amarran en un muelle para ver que estén en condiciones, y si no, decomisarlos_
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el barco terminó de cargar pasajeros |
+| **Entonces** | el prefecto decide inspeccionar con cierta probabilidad el barco |
+| **Y** | esa probabilidad es menor que la del inspector de tickets |
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el prefecto inspecciona el barco |
+| **Entonces** | decide con cierta probabilidad decomisarlo |
+| **Y** | descarga a todos los pasajeros, acolándolos en el muelle |
+| **Y** | el proceso barco es terminado y se suma 1 al contador de "Naves decomisadas" |
+
+#### Caso 16
+
+***TODO*** Caso del turista que decide caminar
