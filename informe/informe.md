@@ -383,4 +383,12 @@ _Como **prefecto** quiero poder inspeccionar barcos que amarran en un muelle par
 
 #### Caso 16
 
+_Como **usuario de la aplicación** quiero conocer la cantidad de pasajeros que fueron bajados por no tener ticket y de naves decomisadas_
+
+| **Dado** | un usuario que ejecuta la aplicación |
+|:---|:---|
+| **Cuando** | el usuario ingresa por consola el comando `count` |
+| **Entonces** | se imprime por pantalla "Pasajeros sin ticket bajados:" seguido de la cantidad de pasajeros que fueron bajados hasta el momento |
+| **Y** | se imprime por pantalla "Naves decomisadas:" seguido de la cantidad de barcos que fueron decomisados hasta el momento |
+
 ***TODO*** Caso del turista que decide caminar
