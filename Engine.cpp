@@ -16,15 +16,13 @@ Engine::Engine(const Configuration &config)
   boat_generator_factory(
     config.get_boat_count(),
     config.get_boat_capacity()
-  ) {
+  ),
+  semaforo(SEM) {
+  semaforo.inicializar(0);
+  control.initialize();
 }
 
 int Engine::run() {
-
-  Semaforo sem(SEM);
-
-  //arranca en 0 para q no se pidan datos antes de inicialziar
-  sem.inicializar(0);
 
   LOG(LOG_INFO, "Iniciando generador de ciudades.");
   spawn_child(city_generator_factory);
@@ -39,16 +37,12 @@ int Engine::run() {
   receive_commands();
 
   LOG(LOG_INFO, "Finalizando simulación.")
-  sem.eliminar();
-
   return 0;
 }
 
 void Engine::receive_commands() {
   const uint32_t MAX_COMMAND_LENGTH = 32;
   char command_buffer[MAX_COMMAND_LENGTH];
-  Control control;
-  control.initialize();
   while (!should_quit_gracefully()) {
     bzero(command_buffer, MAX_COMMAND_LENGTH);
     read(STDIN_FILENO, &command_buffer, MAX_COMMAND_LENGTH);
@@ -62,4 +56,8 @@ void Engine::receive_commands() {
       LOG(LOG_INFO, "Naves decomisadas: " << control.get_captured_ships_count());
     }
   }
+}
+
+Engine::~Engine() {
+  semaforo.eliminar();
 }

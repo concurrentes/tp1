@@ -6,6 +6,8 @@
 #include "BoatGenerator.h"
 #include "CityGenerator.h"
 #include "WalkerGenerator.h"
+#include "Semaforo.h"
+#include "Control.h"
 
 class Engine : public Process {
 
@@ -15,6 +17,9 @@ private:
   BoatGeneratorFactory boat_generator_factory;
   WalkerGeneratorFactory walking_generator_factory;
 
+  Semaforo semaforo;
+  Control control;
+
   int run();
 
 public:
@@ -22,6 +27,8 @@ public:
   Engine(const Configuration &config);
 
   void receive_commands();
+
+  ~Engine();
 
 };
 

@@ -11,12 +11,13 @@ int main(int argc, char** argv) {
   Configuration configuration = Configuration::get_instance();
 
   LOG(LOG_INFO, "Iniciando simulación.");
-  Engine engine(configuration);
-  engine.start();
+  Process *engine = new Engine(configuration);
+  engine->start(NULL);
 
   LOG(LOG_INFO, "Esperando finalización de la simulación.");
   wait(0);
 
+  delete engine;
   LOG(LOG_INFO, "Simulación finalizada.");
   return 0;
 }

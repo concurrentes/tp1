@@ -74,6 +74,8 @@ private:
    */
   void _shutdown_children();
 
+  Process *parent;
+
 protected:
 
   /*
@@ -90,6 +92,8 @@ protected:
   bool should_quit_gracefully();
 
 public:
+
+  Process();
 
   /*
    * start
@@ -114,6 +118,14 @@ public:
    *
    */
   void start();
+
+  /*
+   * Funciona igual que start, solo que recibe un punteros que serán liberado
+   * cuando el hijo comience y termine su ejecución.
+   */
+  void start(Process *me, Process *parent);
+
+  void start(Process *parent);
 
   /*
    * get_pid
@@ -195,6 +207,8 @@ public:
    *
    */
   virtual int handle_signal(int signum);
+
+  void set_parent(Process *parent);
 
   virtual ~Process();
 

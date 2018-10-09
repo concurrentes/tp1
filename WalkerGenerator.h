@@ -15,6 +15,8 @@ public:
 
     WalkerGenerator();
 
+    virtual ~WalkerGenerator();
+
 };
 
 class WalkerGeneratorFactory : public ProcessFactory {
