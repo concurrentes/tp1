@@ -22,13 +22,7 @@ Cuando un barco toma un muelle, procede a descargar a aquellos no turistas que t
 
 Adicionalmente, en las ciudades pueden subir al barco inspectores de pasajes y oficiales de la prefectura naval. Cuando un inspector de pasajes sube a un barco, procederá a verificar que todos los pasajeros tengan sus pasajes; aquellos que no los tengan deberán bajar del barco y pagar una multa. Los oficiales de la prefectura naval, por otro lado, verificarán que el conductor del barco tenga todos los papeles en orden; de no ser el caso, todos los pasajeros deberán bajar y el barco será decomisado.
 
-
-
-
-
 ### Diseño de la solución
-
-
 
 #### Procesos fundamentales
 
@@ -97,6 +91,14 @@ La jerarquía de clases se esquematiza en la figura 5. Todos los procesos hereda
 
 <center>Figura 5: Jerarquía de clases; solo se muestran las clases más importantes.</center>
 
+### Diagrama de Estados del Pasajero
+
+Los estados de un pasajero se representan a través del siguiente diagrama de estados:
+
+![estados-pasajero](img/estados-pasajero.svg)
+<center>Figura 6: Diagrama de estados de un pasajero</center>
+
+El pasajero es originalmente creado por la clase `City` cada cierto tiempo, y ni bien es creado se encola en la cola del muelle. Cuando un barco con lugar llega al muelle, se sube al barco. Cuando llega a otro muelle, puede ser bajado por un inspector por no tener boleto (en cuyo caso el pasajero es eliminado), puede bajar porque es su destino (en cuyo caso es eliminado) o puede bajar porque es un turista. Si el turista aleatoriamente decide pasear por la zona sin destino, el pasajero es eliminado. Si no, la clase `Walker` lo toma de una cola y lo lleva después de cierto tiempo al muelle de su ciudad destino para volver a encolarse a esperar un barco.
 
 ### User stories
 
@@ -391,4 +393,29 @@ _Como **usuario de la aplicación** quiero conocer la cantidad de pasajeros que 
 | **Entonces** | se imprime por pantalla "Pasajeros sin ticket bajados:" seguido de la cantidad de pasajeros que fueron bajados hasta el momento |
 | **Y** | se imprime por pantalla "Naves decomisadas:" seguido de la cantidad de barcos que fueron decomisados hasta el momento |
 
-***TODO*** Caso del turista que decide caminar
+#### Caso 17
+
+_Como **turista** quiero tener la posibilidad de tomar un barco sin un destino en particular y bajar en una ciudad que quiera_
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | el barco amarra en un muelle |
+| **Entonces** | aleatoriamente el turista puede decidir bajarse en esa ciudad |
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | turista decide bajar en un muelle |
+| **Y** | decide caminar hasta un nuevo destino |
+| **Entonces** | el turista camina desde la ciudad donde bajó hasta su nueva ciudad destino |
+
+| **Dado** | un pasajero que decidió caminar hasta una ciudad|
+|:---|:---|
+| **Cuando** | una cierta cantidad de tiempo aleatoria ha pasado |
+| **Entonces** | el turista aparece en esa ciudad |
+| **Y** | se encola para esperar el próximo barco |
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | turista decide bajar en un muelle |
+| **Y** | decide caminar sin destino |
+| **Entonces** | el turista sigue su viaje caminando y no vuelve a aparecer en ninguna ciudad a esperar ningún barco |
