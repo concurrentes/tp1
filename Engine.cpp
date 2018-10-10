@@ -39,7 +39,7 @@ int Engine::run() {
 
   // El comando 'count' y el comando 'quit' deben verse por pantalla siempre
   std::cout << "Finalizando simulación." << std::endl;
-  sem.eliminar();
+  return 0;
 
 }
 
