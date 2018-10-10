@@ -12,9 +12,10 @@ Lock::Lock(std::string name) {
   this->lock.l_start = 0;
   this->lock.l_whence = SEEK_SET;
 
-  this->fd = open(this->name.c_str(), O_CREAT|O_WRONLY, 0777);
+  this->fd = open(this->name.c_str(), O_CREAT|O_WRONLY, 0644);
   if (fd < 0) {
     LOG(LOG_ERROR, "Error tratando de crear archivo de lock " + this->name);
+    perror("Error: ");
     exit(0);
   }
   std::string message = "Intento de tomar lock";
@@ -25,6 +26,7 @@ Lock::Lock(std::string name) {
   // Intento de tomar lock sobre el archivo .lock
   if (fcntl(this->fd, F_SETLKW, &(this->lock)) < 0) {
     LOG(LOG_ERROR, "Error tomando lock, errno: " + std::to_string(errno));
+    perror("Error: ");
     exit(0);
   }
 }
