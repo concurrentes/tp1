@@ -27,7 +27,7 @@ void Generator::register_factory(
 
 int Generator::run() {
   LOG(LOG_DEBUG, "Ejecutando generador (T=" << interval << ")");
-  
+
   for (unsigned int i = 0; !should_quit_gracefully() && (max == 0 || i < max); i++) {
     sleep(interval);
     generate_random_process();

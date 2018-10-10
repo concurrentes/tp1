@@ -16,3 +16,6 @@ WalkerGenerator::WalkerGenerator() :
 Process *WalkerGeneratorFactory::instantiate() {
     return new WalkerGenerator();
 }
+
+WalkerGenerator::~WalkerGenerator() {
+}

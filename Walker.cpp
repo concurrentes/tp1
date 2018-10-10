@@ -44,7 +44,7 @@ int Walker::run() {
             LOG(LOG_INFO, "Turista " << current->id << " llega a la ciudad " << current->destination);
             BlockingSharedQueue destination_queue(current->destination);
             destination_queue.enqueue((void*)current, sizeof(person_t), 0);
-            delete current;
+            free(current);
         }
 
         people.clear();

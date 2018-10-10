@@ -22,13 +22,7 @@ Cuando un barco toma un muelle, procede a descargar a aquellos no turistas que t
 
 Adicionalmente, en las ciudades pueden subir al barco inspectores de pasajes y oficiales de la prefectura naval. Cuando un inspector de pasajes sube a un barco, procederá a verificar que todos los pasajeros tengan sus pasajes; aquellos que no los tengan deberán bajar del barco y pagar una multa. Los oficiales de la prefectura naval, por otro lado, verificarán que el conductor del barco tenga todos los papeles en orden; de no ser el caso, todos los pasajeros deberán bajar y el barco será decomisado.
 
-
-
-
-
 ### Diseño de la solución
-
-
 
 #### Procesos fundamentales
 
@@ -97,5 +91,335 @@ La jerarquía de clases se esquematiza en la figura 5. Todos los procesos hereda
 
 <center>Figura 5: Jerarquía de clases; solo se muestran las clases más importantes.</center>
 
+### Diagrama de Estados del Pasajero
 
+Los estados de un pasajero se representan a través del siguiente diagrama de estados:
 
+![estados-pasajero](img/estados-pasajero.svg)
+<center>Figura 6: Diagrama de estados de un pasajero</center>
+
+El pasajero es originalmente creado por la clase `City` cada cierto tiempo, y ni bien es creado se encola en la cola del muelle. Cuando un barco con lugar llega al muelle, se sube al barco. Cuando llega a otro muelle, puede ser bajado por un inspector por no tener boleto (en cuyo caso el pasajero es eliminado), puede bajar porque es su destino (en cuyo caso es eliminado) o puede bajar porque es un turista. Si el turista aleatoriamente decide pasear por la zona sin destino, el pasajero es eliminado. Si no, la clase `Walker` lo toma de una cola y lo lleva después de cierto tiempo al muelle de su ciudad destino para volver a encolarse a esperar un barco.
+
+### User stories
+
+#### Caso 1
+
+_Como **usuario de la aplicación** quiero que al correr la aplicación en modo no-debug la aplicación corra sin mostrar mensajes de log en pantalla_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+|**Cuando** | el usuario la ejecuta en modo no-debug |
+|**Entonces** | se muestra un mensaje introductorio explicándole cómo se correrá la aplicación |
+
+| **Dado** | la aplicación corriendo en modo no-debug |
+|:---|:---|
+|**Cuando** | ocurre un evento que resulta en un log |
+|**Entonces** | ese log no se muestra en pantalla ni en ningún otro lado |
+
+---
+
+#### Caso 2
+
+_Como **usuario de la aplicación** quiero que al correr la aplicación en modo debug la aplicación corra sin mostrar mensajes de log en pantalla y se genere un archivo de log con los mensajes loggeados_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+|**Cuando** | el usuario la ejecuta en modo debug |
+|**Entonces** | se muestra un mensaje introductorio explicándole cómo se correrá la aplicación |
+
+| **Dado** | la aplicación corriendo en modo debug |
+|:---|:---|
+|**Cuando** | ocurre un evento que resulta en un log |
+|**Y** | no existe el archivo de log |
+|**Entonces** | ese log no se muestra en pantalla ni en ningún otro lado |
+|**Y** | ese log no se muestra en pantalla |
+| **Y** | se crea el archivo de log |
+| **Y** | se escribe el mensaje en el archivo |
+
+---
+
+#### Caso 3
+
+_Como **usuario de la aplicación** quiero que al ingresar por consola el comando 'quit' el programa se detenga completamente, sin pérdida de memoria compartida, semáforos y sin dejar procesos colgados_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+| **Y** | la aplicación está corriendo |
+| **Cuando** | el usuario ingresa por consola el comando _quit_ |
+| **Entonces** | la aplicación se detiene |
+| **Y** | se muestra un mensaje en pantalla indicando que se detuvo la aplicación exitosamente |
+
+| **Dado** | la aplicación detenida luego de ejecutar el comando _quit_ |
+|:---|:---|
+| **Cuando** | el usuario ejecuta el comando _ps_ |
+| **Entonces** | no se ven procesos relacionados a la aplicación |
+
+| **Dado** | la aplicación detenida luego de ejecutar el comando _quit_ |
+|:---|:---|
+| **Cuando** | el usuario ejecuta el comando _ipcs_ |
+| **Entonces** | no se ven segmentos de memoria compartida ni semáforos asociados a la aplicación |
+
+---
+
+#### Caso 4
+
+_Como **usuario de la aplicación** quiero que la corrida del proceso no resulte en pérdida de memoria_
+
+| **Dado** | un usuario con permiso para ejecutar la aplicación |
+|:---|:---|
+| **Cuando** | el usuario la corre utilizando Valgrind |
+| **Entonces** | Valgrind no registra reportes de procesos con pérdida de memoria |
+
+---
+
+#### Caso 5
+
+_Como **motor de la aplicación** quiero generar barcos para que transporten pasajeros por las ciudades, que su cantidad y capacidad sean configurables_
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera procesos barco |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera tantos procesos barco como aparecen en el archivo `config.ini` bajo el tag `BOAT_COUNT` |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera tantos procesos barco con capacidad igual al número que aparece en el archivo `config.ini` bajo el tag `BOAT_CAPACITY` |
+
+---
+
+#### Caso 6
+
+_Como **motor de la aplicación** quiero generar ciudades para que alberguen a los pasajeros y reciban barcos que los transporten entre ellas_
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera procesos ciudad |
+
+| **Dado** | el motor de la aplicación |
+|:---|:---|
+| **Cuando** | la aplicación se inicia |
+| **Entonces** | el motor de la aplicación genera mínimamente 2 procesos ciudad |
+
+---
+
+#### Caso 7
+
+_Como **ciudad** voy a generar pasajeros para que recorran el lago en barco_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán cada cierto tiempo pasajeros con origen en esta ciudad|
+
+---
+
+#### Caso 8
+
+_Como **ciudad** voy a generar pasajeros que sean trabajadores (con un destino específico) o turistas (sin destino específico) para que recorran el lago de formas distintas_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán pasajeros no turistas que tendrán un destino fijo, determinado por una probabilidad |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | se inicia la aplicación |
+| **Entonces** | se generarán pasajeros turistas que no tendrán un destino fijo, determinado por una probabilidad |
+
+---
+
+#### Caso 9
+
+_Como **ciudad** voy a encolar a los pasajeros generados en una cola a la espera de un barco que los pueda transportar_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Y** | un pasajero |
+| **Cuando** | el pasajero es creado |
+| **Entonces** | se encola el pasajero en la cola de la ciudad a esperar un barco |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Y** | un pasajero |
+| **Cuando** | el pasajero es creado |
+| **Y** | no existe cola para la ciudad |
+| **Entonces** | se crea la cola de la ciudad como memoria compartida |
+| **Y** | se encola el pasajero en la cola de la ciudad a esperar un barco |
+
+---
+
+#### Caso 10
+
+_Como **ciudad** que recibir un único barco a la vez en mi muelle_
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | un barco llega a la ciudad |
+| **Y** | no hay ningún barco en el muelle |
+| **Entonces** | dejo que el barco amarre en el muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Cuando** | un barco llega a la ciudad |
+| **Y** | hay barco en el muelle |
+| **Entonces** | el barco se encola en una cola esperando amarrar al muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+|**Cuando** | un barco llega a la ciudad |
+| **Y** | hay barco en el muelle |
+| **Y** | no existe cola para el muelle |
+|**Entonces** | se crea la cola del muelle como memoria compartida |
+|**Y** | el barco se encola en esa cola esperando amarrar al muelle |
+
+| **Dado** | una ciudad del programa |
+|:---|:---|
+| **Y** | hay barco en el muelle |
+| **Y** | hay barcos esperando en la cola |
+|**Cuando** | el barco zarpa |
+|**Entonces** | el primer barco en la cola sale de ella y amarra en el muelle |
+
+---
+
+#### Caso 11
+
+_Como **barco** quiero poder descargar mis pasajeros no-turistas en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco hace descender a los pasajeros no-turistas cuyo destino sea esta ciudad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco no fuerza a descender a los pasajeros no-turistas cuyo destino no sea esta ciudad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Y** | el barco no tiene pasajeros |
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | nadie desciende del barco |
+
+#### Caso 12
+
+_Como **barco** quiero poder descargar mis pasajeros turistas en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco hace descender a los pasajeros turistas que quieran bajar en esta ciudad con cierta probabilidad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco no fuerza a descender a los pasajeros turistas que decidieron no bajar en esta ciudad |
+
+#### Caso 13
+
+_Como **barco** quiero poder cargar pasajeros en el muelle_
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco llega a la ciudad |
+| **Entonces** | el barco sólo empieza a cargar pasajeros cuando terminó de descargar los pasajeros que tenían que bajar |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco sigue lleno |
+| **Entonces** | el barco no carga ningún pasajero en el muelle y zarpa |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco tiene lugar |
+| **Entonces** | el barco carga pasajeros de la cola del muelle en orden hasta ocupar su capacidad |
+
+| **Dado** | un barco del programa con pasajeros |
+|:---|:---|
+| **Cuando** | el barco terminó de bajar pasajeros |
+| **Y** | el barco tiene lugar |
+| **Y** | no hay pasajeros en la cola del muelle |
+| **Entonces** | el barco no carga pasajeros y zarpa del muelle |
+
+#### Caso 14
+
+_Como **inspector** quiero poder hacer bajar pasajeros de barcos que no tengan ticket_
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el barco terminó de cargar pasajeros |
+| **Entonces** | el inspector decide inspeccionar con cierta probabilidad el barco |
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el inspector sube a inspeccionar pasajes |
+| **Y** | un pasajero no tiene ticket |
+| **Entonces** | pasajero baja del barco y se suma 1 al contador de "Pasajeros sin ticket bajados" |
+
+#### Caso 15
+
+_Como **prefecto** quiero poder inspeccionar barcos que amarran en un muelle para ver que estén en condiciones, y si no, decomisarlos_
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el barco terminó de cargar pasajeros |
+| **Entonces** | el prefecto decide inspeccionar con cierta probabilidad el barco |
+| **Y** | esa probabilidad es menor que la del inspector de tickets |
+
+| **Dado** | un barco en una ciudad |
+|:---|:---|
+| **Cuando** | el prefecto inspecciona el barco |
+| **Entonces** | decide con cierta probabilidad decomisarlo |
+| **Y** | descarga a todos los pasajeros, acolándolos en el muelle |
+| **Y** | el proceso barco es terminado y se suma 1 al contador de "Naves decomisadas" |
+
+<br/>
+<br/>
+<br/>
+
+#### Caso 16
+
+_Como **usuario de la aplicación** quiero conocer la cantidad de pasajeros que fueron bajados por no tener ticket y de naves decomisadas_
+
+| **Dado** | un usuario que ejecuta la aplicación |
+|:---|:---|
+| **Cuando** | el usuario ingresa por consola el comando `count` |
+| **Entonces** | se imprime por pantalla "Pasajeros sin ticket bajados:" seguido de la cantidad de pasajeros que fueron bajados hasta el momento |
+| **Y** | se imprime por pantalla "Naves decomisadas:" seguido de la cantidad de barcos que fueron decomisados hasta el momento |
+
+#### Caso 17
+
+_Como **turista** quiero tener la posibilidad de tomar un barco sin un destino en particular y bajar en una ciudad que quiera_
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | el barco amarra en un muelle |
+| **Entonces** | aleatoriamente el turista puede decidir bajarse en esa ciudad |
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | turista decide bajar en un muelle |
+| **Y** | decide caminar hasta un nuevo destino |
+| **Entonces** | el turista camina desde la ciudad donde bajó hasta su nueva ciudad destino |
+
+| **Dado** | un pasajero que decidió caminar hasta una ciudad|
+|:---|:---|
+| **Cuando** | una cierta cantidad de tiempo aleatoria ha pasado |
+| **Entonces** | el turista aparece en esa ciudad |
+| **Y** | se encola para esperar el próximo barco |
+
+| **Dado** | un pasajero turista en un barco |
+|:---|:---|
+| **Cuando** | turista decide bajar en un muelle |
+| **Y** | decide caminar sin destino |
+| **Entonces** | el turista sigue su viaje caminando y no vuelve a aparecer en ninguna ciudad a esperar ningún barco |

@@ -11,8 +11,9 @@ Lock::Lock(std::string name) {
   this->lock.l_start = 0;
   this->lock.l_whence = SEEK_SET;
 
-  this->fd = open(this->name.c_str(), O_CREAT|O_WRONLY, 0777);
+  this->fd = open(this->name.c_str(), O_CREAT|O_WRONLY, 0644);
   if (fd < 0) {
+    perror("Error: ");
     exit(0);
   }
 
@@ -20,6 +21,7 @@ Lock::Lock(std::string name) {
 
   // Intento de tomar lock sobre el archivo .lock
   if (fcntl(this->fd, F_SETLKW, &(this->lock)) < 0) {
+    perror("Error: ");
     exit(0);
   }
 }

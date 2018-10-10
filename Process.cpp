@@ -8,21 +8,35 @@
 #include <sys/wait.h>
 #include <assert.h>
 
-void Process::start() {
+Process::Process() {
+  this->parent = NULL;
+}
+
+void Process::start(Process *me, Process *parent) {
   this->graceful_quit = 0;
   this->pid = fork();
 
   if (this->pid == 0) {
+    this->parent = parent;
     LOG(LOG_DEBUG, "Proceso " << get_pid() << " instanciado.");
     SignalHandler::getInstance()->registrarHandler(SIGINT, this);
     srand(get_pid());
     int exit_status = run();
     shutdown();
     _finalize();
+    delete me;
     exit(exit_status);
   } else {
     LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") iniciado.");
   }
+}
+
+void Process::start(Process *parent) {
+  start(this, parent);
+}
+
+void Process::start() {
+  start(this, NULL);
 }
 
 pid_t Process::get_pid() {
@@ -46,7 +60,7 @@ int Process::wait_for_exit() {
 
 int Process::wait_for_child() {
   if (this->is_self()) {
-    int status;
+    int status = 0;
     wait(&status);
     return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
   }
@@ -91,7 +105,7 @@ void Process::_clear_children() {
 void Process::spawn_child(ProcessFactory &factory) {
   if (!should_quit_gracefully()) {
     Process *p = factory.instantiate();
-    p->start();
+    p->start(p, this);
     children.push_back(p);
   }
 }
@@ -120,9 +134,13 @@ bool Process::should_quit_gracefully() {
   return graceful_quit == 1;
 }
 
+void Process::set_parent(Process *parent) {
+  this->parent = parent;
+}
+
 Process::~Process() {
-  if (this->is_self()) {
-    _finalize();
-    LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") destruido.");
+  _finalize();
+  if (parent != NULL) {
+    delete this->parent;
   }
 }

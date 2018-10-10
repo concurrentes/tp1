@@ -22,6 +22,7 @@ int Boat::run() {
   for (unsigned int city_id = 0; !should_quit_gracefully(); ++city_id) {
     sleep(config.get_city_step_mean_time());
     City current_city(city_id % config.get_city_count());
+    current_city.set_parent(NULL);
     current_city.receive_boat(*this);
   }
 
@@ -130,7 +131,7 @@ std::vector<person_t *>::iterator Boat::discharge_passenger(
   person_t *passenger = *it;
 
   sleep(Configuration::get_instance().get_mean_gate_time());
-  delete passenger;
+  free(passenger);
   return passengers.erase(it);
 }
 
@@ -145,7 +146,7 @@ unsigned int Boat::get_free_seats() {
 Boat::~Boat() {
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ++it) {
-    delete *it;
+    free(*it);
   }
   passengers.clear();
 }

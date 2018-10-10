@@ -98,7 +98,7 @@ void City::receive_boat(Boat &boat) {
      if (Random::bernoulli(config.get_probability_of_ticket_inspector())) {
          boat.discharge_passengers_without_ticket();
      }
-     
+
      LOG(LOG_INFO, "Bote " << boat.get_pid() << " sale de ciudad " << this->id);
   } catch (const std::string& message) {
       LOG(LOG_INFO, message);
