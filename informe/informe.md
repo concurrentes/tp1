@@ -383,6 +383,9 @@ _Como **prefecto** quiero poder inspeccionar barcos que amarran en un muelle par
 | **Y** | descarga a todos los pasajeros, acolándolos en el muelle |
 | **Y** | el proceso barco es terminado y se suma 1 al contador de "Naves decomisadas" |
 
+<br/>
+<br/>
+<br/>
 #### Caso 16
 
 _Como **usuario de la aplicación** quiero conocer la cantidad de pasajeros que fueron bajados por no tener ticket y de naves decomisadas_
