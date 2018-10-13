@@ -4,6 +4,7 @@
 #include "BlockingSharedQueue.h"
 #include "Process.h"
 #include "ProcessFactory.h"
+#include "Person.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -42,6 +43,8 @@ private:
     BlockingSharedQueue *walking_queue;
 
     int run();
+
+    void spawn_child(person_t* person);
 
 public:
 
