@@ -40,7 +40,7 @@ void Boat::receive_passenger(person_t *passenger) {
   passengers.push_back(passenger);
 }
 
-void Boat::discharge_passengers() {
+void Boat::discharge_passengers(const int city_id) {
   Configuration config = Configuration::get_instance();
 
   std::vector<person_t *>::iterator it;
@@ -50,7 +50,7 @@ void Boat::discharge_passengers() {
     const char *description = get_description(*current);
 
     LOG(LOG_INFO, "Bote " << get_pid() << " descargando " << description << " " << current->id);
-    it = discharge_passenger(it);
+    it = discharge_passenger(it, city_id);
   }
 }
 
@@ -126,11 +126,17 @@ void Boat::discharge_passengers_without_ticket() {
 }
 
 std::vector<person_t *>::iterator Boat::discharge_passenger(
-  std::vector<person_t*>::iterator &it) {
+  std::vector<person_t*>::iterator &it, const int city_id) {
 
   person_t *passenger = *it;
 
   sleep(Configuration::get_instance().get_mean_gate_time());
+  if (city_id >= 0) {
+      BlockingSharedQueue dock_queue(city_id);
+      dock_queue.enqueue(passenger, sizeof(person_t), 0);
+      const char *type = get_description(*passenger);
+      LOG(LOG_INFO, type << " " << passenger->id << " vuelve a esperar en el puerto " << city_id);
+  }
   free(passenger);
   return passengers.erase(it);
 }
