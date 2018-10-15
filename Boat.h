@@ -22,7 +22,7 @@ public:
   void discharge_passengers();
   void discharge_passengers_without_ticket();
   void receive_passenger(person_t *passenger);
-
+  bool should_quit();
   std::vector<person_t *>::iterator discharge_passenger(
     std::vector<person_t*>::iterator &current_it);
 

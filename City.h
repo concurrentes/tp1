@@ -23,7 +23,6 @@ class Boat;
  * las ciudades instanciadas.
  */
 class CityFactory : public ProcessFactory {
-
 private:
 
   static unsigned int city_count;

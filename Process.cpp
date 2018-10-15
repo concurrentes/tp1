@@ -84,6 +84,7 @@ void Process::shutdown() {
     this->graceful_quit = 1;
     _shutdown_children();
     wait_for_children();
+
   } else {
     LOG(LOG_DEBUG, "Enviando SIGINT a " << this->get_pid() << ".");
     kill(this->get_pid(), SIGINT);

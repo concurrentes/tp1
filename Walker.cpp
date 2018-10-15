@@ -38,7 +38,7 @@ int Walker::run() {
         }
 
         std::list<void *>::iterator it;
-        for (it = people.begin(); it != people.end(); ++it) {
+        for (it = people.begin(); it != people.end() && should_quit_gracefully(); ++it) {
             person_t *current = (person_t *) (*it);
             LOG(LOG_INFO, "Turista " << current->id << " saca fotos mientras camina");
             LOG(LOG_INFO, "Turista " << current->id << " llega a la ciudad " << current->destination);
