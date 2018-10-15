@@ -8,7 +8,7 @@ WalkerGenerator::WalkerGenerator() :
     Generator(0, 1),
     walking_queue(Configuration::get_instance().get_city_count()) {
 
-    LOG(LOG_DEBUG, "Iniciando generador de paseadores");
+    LOG(LOG_INFO, "Iniciando generador de paseadores");
     register_factory(factory, 1);
 }
 

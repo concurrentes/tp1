@@ -70,13 +70,10 @@ void City::push_new_person() {
 
 void City::receive_boat(Boat &boat) {
 
-  LOG(LOG_DEBUG, "Bote intentando tomar lock con PID " << boat.get_pid() << " muelle " << this->id);
   Lock(this->lock_path);
   if (this->should_quit_gracefully() || boat.should_quit()) {
-    LOG(LOG_DEBUG, "SHOULD QUIT GRACEFULLY RECEIVE_BOAT " << getpid());
     return;
   }
-  LOG(LOG_DEBUG, "Bote tomando lock para ciudad con PID " << boat.get_pid() << " muelle " << this->id);
   LOG(LOG_INFO, "Bote " << boat.get_pid() << " llega a ciudad " << this->id);
 
   // Bajamos a los pasajeros que vienen a esta ciudad.
@@ -131,10 +128,8 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
   // Creamos una lista para contener a la gente esperando.
   std::list<void *> people;
 
-  LOG(LOG_DEBUG, "Tomando lock de muelle con PID " << getpid() << " muelle " << this->id);
   int taken = dock_queue->take(free_seats, people);
   if (this->should_quit_gracefully() || boat.should_quit()) {
-    LOG(LOG_DEBUG, "SHOULD QUIT GRACEFULLY LOAD_PASSENGERS_INTO " << getpid());
     std::list<void *>::iterator it;
     for (it = people.begin(); it != people.end(); ++it) {
       free(*it);
@@ -146,7 +141,6 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
     LOG(LOG_INFO, "No hay gente en el muelle " << this->id);
     return;
   }
-  LOG(LOG_DEBUG, "Lock de muelle tomado con PID " << getpid() << " muelle " << this->id);
   /*
    * Ahora contamos con una lista de personas que quieren subir al bote.
    * La idea es iterar por la lista y por cada persona realizar una acción.
@@ -180,6 +174,5 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
 }
 
 City::~City() {
-  LOG(LOG_DEBUG, "City shutting down with PID " << getpid());
   close(this->fd);
 }

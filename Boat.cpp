@@ -147,7 +147,6 @@ bool Boat::should_quit() {
 }
 
 Boat::~Boat() {
-  LOG(LOG_DEBUG, "Boat shutting down with PID " << getpid());
   std::vector<person_t *>::iterator it;
   for (it = passengers.begin(); it != passengers.end(); ++it) {
     free(*it);
