@@ -8,6 +8,7 @@
 #include <string.h>
 #include <strings.h>
 #include <iostream>
+#include <cstdlib>
 
 Engine::Engine(const Configuration &config)
   :
@@ -36,6 +37,8 @@ int Engine::run() {
 
   LOG(LOG_INFO, "Simulación en curso.");
   receive_commands();
+
+  LOG(LOG_INFO, "Limpiando /tmp/ de archivos de shm y locks");
 
   // El comando 'count' y el comando 'quit' deben verse por pantalla siempre
   std::cout << "Finalizando simulación." << std::endl;

@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "Configuration.h"
 #include "Engine.h"
+#include "TmpCleaner.h"
 
 int main(int argc, char** argv) {
   if (argc > 1 && strcmp(argv[1], "debug") == 0) {
@@ -26,6 +27,10 @@ int main(int argc, char** argv) {
   wait(0);
 
   delete engine;
+
+  LOG(LOG_INFO, "Limpiando /tmp/");
+  TmpCleaner::clean_tmp();
+
   LOG(LOG_INFO, "Simulación finalizada.");
   return 0;
 }
