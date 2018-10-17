@@ -11,7 +11,6 @@ WalkingPerson::WalkingPerson(person_t* person):Process() {
 }
 
 WalkingPerson::~WalkingPerson() {
-    if (person) free(person);
 }
 
 int WalkingPerson::run() {

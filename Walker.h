@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string>
+#include <list>
 
 using namespace smstruct;
 
@@ -38,6 +39,8 @@ private:
      */
     std::string lock_path;
 
+    std::list<void *> people;
+
     int fd;
 
     BlockingSharedQueue *walking_queue;
@@ -45,6 +48,12 @@ private:
     int run();
 
     void spawn_child(person_t* person);
+
+    void free_people_resources();
+
+protected:
+
+    virtual void free_resources();
 
 public:
 

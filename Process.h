@@ -90,6 +90,10 @@ protected:
    */
   bool should_quit_gracefully();
 
+protected:
+
+  virtual void free_resources();
+
 public:
 
   Process();

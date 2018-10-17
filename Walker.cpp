@@ -28,8 +28,6 @@ int Walker::run() {
 
 
     while (!should_quit_gracefully()) {
-        std::list<void *> people;
-
         unsigned int mu = config.get_mean_walker_time();
         unsigned int dt = mu/2;
         sleep(Random::random_wait(mu, dt));
@@ -40,10 +38,14 @@ int Walker::run() {
         }
 
         std::list<void *>::iterator it;
-        for (it = people.begin(); it != people.end() && !should_quit_gracefully(); ++it) {
-            spawn_child((person_t*)(*it));
+        for (it = people.begin(); it != people.end() && !should_quit_gracefully();) {
+            person_t *current = (person_t *)(*it);
+            spawn_child(current);
+            free(current);
+            people.erase(it++);
         }
 
+        free_people_resources();
         people.clear();
     }
 
@@ -59,10 +61,22 @@ void Walker::spawn_child(person_t* person) {
     }
 }
 
-
 Walker::Walker() {
   LOG(LOG_INFO, "Instanciado paseador de turistas");
 }
 
+void Walker::free_resources() {
+  delete walking_queue;
+}
+
+void Walker::free_people_resources() {
+  std::list<void *>::iterator it;
+  for (it = people.begin(); it != people.end(); ++it) {
+    person_t *current = (person_t *)(*it);
+    free(current);
+  }
+}
+
 Walker::~Walker() {
+  free_people_resources();
 }

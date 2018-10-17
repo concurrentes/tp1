@@ -10,6 +10,7 @@
 
 Process::Process() {
   this->parent = NULL;
+  this->graceful_quit = 0;
 }
 
 void Process::start(Process *me, Process *parent) {
@@ -17,8 +18,11 @@ void Process::start(Process *me, Process *parent) {
   this->pid = fork();
 
   if (this->pid == 0) {
-    this->parent = parent;
     SignalHandler::getInstance()->registrarHandler(SIGINT, this);
+    this->parent = parent;
+    if (this->parent) {
+      this->parent->free_resources();
+    }
     srand(get_pid());
     int exit_status = run();
     shutdown();
@@ -110,11 +114,14 @@ void Process::spawn_child(ProcessFactory &factory) {
 void Process::clean_zombies() {
   if (this->is_self()) {
     p_vec::iterator it;
-    for (it = children.begin(); it != children.end(); ++it) {
+    for (it = children.begin(); it != children.end();) {
       int status;
       if (waitpid((*it)->get_pid(), &status, WNOHANG) == (*it)->get_pid()) {
-        delete *it;
-        children.erase(it);
+        Process *current = (Process *)(*it);
+        delete current;
+        it = children.erase(it);
+      } else {
+        ++it;
       }
     }
   }
@@ -133,6 +140,9 @@ bool Process::should_quit_gracefully() {
 
 void Process::set_parent(Process *parent) {
   this->parent = parent;
+}
+
+void Process::free_resources() {
 }
 
 Process::~Process() {
