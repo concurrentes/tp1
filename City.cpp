@@ -70,9 +70,10 @@ void City::push_new_person() {
 
 void City::receive_boat(Boat &boat) {
 
-  LOG(LOG_DEBUG, "Intentando tomar lock con descriptor: " + std::to_string(fd));
   Lock(this->lock_path);
-
+  if (this->should_quit_gracefully() || boat.should_quit()) {
+    return;
+  }
   LOG(LOG_INFO, "Bote " << boat.get_pid() << " llega a ciudad " << this->id);
 
   // Bajamos a los pasajeros que vienen a esta ciudad.
@@ -127,11 +128,19 @@ void City::load_passengers_into(Boat &boat, unsigned int free_seats) {
   // Creamos una lista para contener a la gente esperando.
   std::list<void *> people;
 
-  if (dock_queue->take(free_seats, people) == 0) {
+  int taken = dock_queue->take(free_seats, people);
+  if (this->should_quit_gracefully() || boat.should_quit()) {
+    std::list<void *>::iterator it;
+    for (it = people.begin(); it != people.end(); ++it) {
+      free(*it);
+    }
+    people.clear();
+    return;
+  }
+  if (taken == 0) {
     LOG(LOG_INFO, "No hay gente en el muelle " << this->id);
     return;
   }
-
   /*
    * Ahora contamos con una lista de personas que quieren subir al bote.
    * La idea es iterar por la lista y por cada persona realizar una acción.

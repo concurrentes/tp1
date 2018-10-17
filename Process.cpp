@@ -18,7 +18,6 @@ void Process::start(Process *me, Process *parent) {
 
   if (this->pid == 0) {
     this->parent = parent;
-    LOG(LOG_DEBUG, "Proceso " << get_pid() << " instanciado.");
     SignalHandler::getInstance()->registrarHandler(SIGINT, this);
     srand(get_pid());
     int exit_status = run();
@@ -26,8 +25,6 @@ void Process::start(Process *me, Process *parent) {
     _finalize();
     delete me;
     exit(exit_status);
-  } else {
-    LOG(LOG_DEBUG, "Objeto Process(pid: " << this->get_pid() << ") iniciado.");
   }
 }
 
@@ -84,8 +81,8 @@ void Process::shutdown() {
     this->graceful_quit = 1;
     _shutdown_children();
     wait_for_children();
+
   } else {
-    LOG(LOG_DEBUG, "Enviando SIGINT a " << this->get_pid() << ".");
     kill(this->get_pid(), SIGINT);
   }
 }

@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 
 Generator::Generator(unsigned int interval, unsigned int max = 0) {
-  LOG(LOG_DEBUG, "Instanciando generador (T=" << interval << ")");
   this->interval = interval;
   this->max = max;
   this->w_total = 0;
@@ -26,8 +25,6 @@ void Generator::register_factory(
 }
 
 int Generator::run() {
-  LOG(LOG_DEBUG, "Ejecutando generador (T=" << interval << ")");
-
   for (unsigned int i = 0; !should_quit_gracefully() && (max == 0 || i < max); i++) {
     sleep(interval);
     generate_random_process();

@@ -21,6 +21,7 @@ int Boat::run() {
 
   for (unsigned int city_id = 0; !should_quit_gracefully(); ++city_id) {
     sleep(config.get_city_step_mean_time());
+
     City current_city(city_id % config.get_city_count());
     current_city.set_parent(NULL);
     current_city.receive_boat(*this);
@@ -70,8 +71,6 @@ void Boat::discharge_passengers_going_to(unsigned int city_id) {
     }
 
     if (current->type == PERSON_TYPE_TOURIST) {
-      // TODO manejar caso en el que se van a pasear y llegan a otra ciudad.
-
       if (Random::bernoulli(config.get_probability_of_tourist_leaving_ship())) {
         LOG(LOG_INFO, "Al turista " << current->id << " se le antojó bajar en " << city_id);
         LOG(LOG_INFO, "Bote " << get_pid() << " descargando turista " << current->id);
@@ -147,6 +146,10 @@ unsigned int Boat::get_passenger_count() {
 
 unsigned int Boat::get_free_seats() {
   return this->capacity - this->get_passenger_count();
+}
+
+bool Boat::should_quit() {
+  return this->should_quit_gracefully();
 }
 
 Boat::~Boat() {

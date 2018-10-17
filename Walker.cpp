@@ -40,7 +40,7 @@ int Walker::run() {
         }
 
         std::list<void *>::iterator it;
-        for (it = people.begin(); it != people.end(); ++it) {
+        for (it = people.begin(); it != people.end() && !should_quit_gracefully(); ++it) {
             spawn_child((person_t*)(*it));
         }
 

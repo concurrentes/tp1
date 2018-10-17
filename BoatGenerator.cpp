@@ -12,8 +12,8 @@ BoatGenerator::BoatGenerator(
   Generator(GENERATION_INTERVAL, boat_count),
   factory(boat_capacity) {
 
-  LOG(LOG_DEBUG, "Iniciando generador de " << boat_count << " botes.");
-  LOG(LOG_DEBUG, "Intervalo de generación: " << GENERATION_INTERVAL << "s.");
+  LOG(LOG_INFO, "Iniciando generador de " << boat_count << " botes.");
+  LOG(LOG_INFO, "Intervalo de generación: " << GENERATION_INTERVAL << "s.");
   register_factory(factory, 1);
 }
 

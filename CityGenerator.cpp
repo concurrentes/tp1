@@ -5,7 +5,6 @@ CityGenerator::CityGenerator(unsigned int city_count)
   :
   Generator(0, city_count) {
 
-  LOG(LOG_DEBUG, "Iniciando generador de " << city_count << " ciudades.");
   register_factory(factory, 1);
 }
 
