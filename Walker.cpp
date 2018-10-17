@@ -8,6 +8,7 @@
 #include "Configuration.h"
 #include "Walker.h"
 #include "Random.h"
+#include "WalkingPerson.h"
 
 #include <sstream>
 #include <string>
@@ -32,19 +33,15 @@ int Walker::run() {
         unsigned int mu = config.get_mean_walker_time();
         unsigned int dt = mu/2;
         sleep(Random::random_wait(mu, dt));
+        this->clean_zombies();
 
         if (walking_queue->take(walking_queue->count(), people) == 0) {
             LOG(LOG_INFO, "No hay turistas paseando");
         }
 
         std::list<void *>::iterator it;
-        for (it = people.begin(); it != people.end() && should_quit_gracefully(); ++it) {
-            person_t *current = (person_t *) (*it);
-            LOG(LOG_INFO, "Turista " << current->id << " saca fotos mientras camina");
-            LOG(LOG_INFO, "Turista " << current->id << " llega a la ciudad " << current->destination);
-            BlockingSharedQueue destination_queue(current->destination);
-            destination_queue.enqueue((void*)current, sizeof(person_t), 0);
-            free(current);
+        for (it = people.begin(); it != people.end() && !should_quit_gracefully(); ++it) {
+            spawn_child((person_t*)(*it));
         }
 
         people.clear();
@@ -53,6 +50,15 @@ int Walker::run() {
     delete walking_queue;
     return 0;
 }
+
+void Walker::spawn_child(person_t* person) {
+    if (!should_quit_gracefully()) {
+        WalkingPerson *p = new WalkingPerson(person);
+        p->start(p, this);
+        children.push_back(p);
+    }
+}
+
 
 Walker::Walker() {
   LOG(LOG_INFO, "Instanciado paseador de turistas");

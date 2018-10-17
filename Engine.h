@@ -19,7 +19,6 @@ private:
 
   Semaforo semaforo;
   Control control;
-
   int run();
 
 public:

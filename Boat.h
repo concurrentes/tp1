@@ -19,12 +19,12 @@ public:
   unsigned int papers_in_order;
 
   void discharge_passengers_going_to(unsigned int city_id);
-  void discharge_passengers();
+  void discharge_passengers(const int city_id=-1);
   void discharge_passengers_without_ticket();
   void receive_passenger(person_t *passenger);
   bool should_quit();
   std::vector<person_t *>::iterator discharge_passenger(
-    std::vector<person_t*>::iterator &current_it);
+    std::vector<person_t*>::iterator &current_it, const int city_id=-1);
 
   ~Boat();
 

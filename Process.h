@@ -10,7 +10,7 @@
 
 class Process : public EventHandler {
 
-private:
+protected:
 
   pid_t pid;
 
@@ -76,7 +76,6 @@ private:
 
   Process *parent;
 
-protected:
 
   /*
    * clean_zombies

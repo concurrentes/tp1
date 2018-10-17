@@ -113,7 +113,7 @@ void City::inspect_boat(Boat &boat){
     std::string message = "Decomisando Bote " + std::to_string(boat.get_pid());
     LOG(LOG_INFO, "Bote " << boat.get_pid() << " esta flojo de papeles");
     LOG(LOG_INFO, "Bajando pasajeros de Bote " << boat.get_pid());
-    boat.discharge_passengers();
+    boat.discharge_passengers(id);
     boat.shutdown();
     Control().add_captured_ship();
     throw "Decomisando bote " + std::to_string(boat.get_pid());
